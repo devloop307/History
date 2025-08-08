@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Historia 💞</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #ffdde1, #ee9ca7);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Contenedor principal para responsividad */
+    .main-container {
+      max-width: 100%;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 1rem;
+      box-sizing: border-box;
+    }
+
+    /* Fondo glass */
+    .glass {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Corazones flotantes - modificados para empezar desde arriba */
+    .heart {
+      position: absolute;
+      color: rgba(255, 0, 100, 0.8);
+      font-size: 24px;
+      animation: fall linear forwards;
+      opacity: 0.8;
+      z-index: 0;
+      top: -30px; /* Empiezan arriba del viewport */
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(calc(100vh + 30px)) rotate(360deg); /* Aseguramos que pasen toda la pantalla */
+        opacity: 0;
+      }
+    }
+
+    /* Carrusel */
+    .carousel {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .carousel-item {
+      min-width: 100%;
+      position: relative;
+    }
+    .carousel-item img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 1rem;
+    }
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.5);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+    .carousel-control:hover {
+      background: rgba(255, 255, 255, 0.8);
+    }
+    .carousel-control.prev {
+      left: 15px;
+    }
+    .carousel-control.next {
+      right: 15px;
+    }
+    .carousel-indicators {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .carousel-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .carousel-indicator.active {
+      background: rgba(255, 255, 255, 0.9);
+      transform: scale(1.2);
+    }
+
+    /* Línea de tiempo mejorada */
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 2rem;
+    }
+    .timeline-item:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .timeline-item:last-child:before {
+      height: 1.5rem;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -8px;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ff5e8a;
+      border: 2px solid white;
+    }
+    .timeline-content {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .timeline-content:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateX(5px);
+    }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+      .carousel-item img {
+        height: 300px;
+      }
+      .glass {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+      h1 {
+        font-size: 2.5rem;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+      .main-container {
+        padding: 0 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .carousel-item img {
+        height: 250px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .timeline-item {
+        padding-left: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body class="text-white relative">
+  <div class="main-container">
+    <!-- Portada -->
+    <section class="relative h-screen flex flex-col items-center justify-center text-center glass rounded-3xl mx-2 mt-4 p-6 shadow-lg z-10">
+      <h1 class="text-4xl md:text-6xl font-[cursive] drop-shadow-lg">Nuestra Historia 💞</h1>
+      <p class="mt-4 text-lg md:text-xl">Cada momento contigo es un capítulo hermoso 💖</p>
+      <button onclick="scrollToGallery()" class="mt-6 px-6 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition transform hover:scale-105">
+        Ver Galería 📸
+      </button>
+    </section>
+
+    <!-- Galería -->
+    <section id="gallery-section" class="py-10 glass rounded-3xl mx-2 mt-6 p-6 shadow-lg z-10">
+      <div class="max-w-5xl mx-auto px-2">
+        <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
+        
+        <!-- Carrusel -->
+        <div class="carousel mb-8">
+          <div class="carousel-inner" id="carousel-inner">
+            <div class="carousel-item">
+              <img src="https://placekitten.com/800/500" alt="Foto 1" class="w-full">
+              <p class="p-2 text-center text-sm mt-2">📅 Subida el 08/08/2025</p>
+            </div>
+            <div class="carousel-item">
+              <img src="https://placekitten.com/801/500" alt="Foto 2" class="w-full">
+              <p class="p-2 text-center text-sm mt-2">📅 Subida el 07/08/2025</p>
+            </div>
+            <div class="carousel-item">
+              <img src="https://placekitten.com/802/500" alt="Foto 3" class="w-full">
+              <p class="p-2 text-center text-sm mt-2">📅 Subida el 06/08/2025</p>
+            </div>
+          </div>
+          <button class="carousel-control prev" onclick="prevSlide()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="carousel-control next" onclick="nextSlide()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="carousel-indicators" id="carousel-indicators">
+            <div class="carousel-indicator active" onclick="goToSlide(0)"></div>
+            <div class="carousel-indicator" onclick="goToSlide(1)"></div>
+            <div class="carousel-indicator" onclick="goToSlide(2)"></div>
+          </div>
+        </div>
+
+        <label class="mt-6 block text-center px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer transform hover:scale-105">
+          📸 Subir Foto
+          <input type="file" accept="image/*" class="hidden" id="upload">
+        </label>
+      </div>
+    </section>
+
+    <!-- Línea de tiempo mejorada -->
+    <section class="py-10 glass rounded-3xl mx-2 mt-6 p-6 shadow-lg z-10">
+      <div class="max-w-3xl mx-auto px-2">
+        <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
+        <div id="timeline" class="space-y-4">
+          <!-- Primer evento -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="font-bold text-white text-lg">14/02/2025 - San Valentín</p>
+              <p class="mt-1">Nuestro primer San Valentín juntos ❤️. Te preparé una cena romántica con velas y tu postre favorito. Recuerdo cómo tus ojos brillaban con la luz de las velas.</p>
+            </div>
+          </div>
+          
+          <!-- Segundo evento -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="font-bold text-white text-lg">01/01/2025 - Año Nuevo</p>
+              <p class="mt-1">Primer Año Nuevo juntos 🎉. Lo celebramos en la playa, viendo los fuegos artificiales. Prometimos comenzar este año juntos y así será por muchos años más.</p>
+            </div>
+          </div>
+          
+          <!-- Tercer evento -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="font-bold text-white text-lg">15/12/2024 - Nuestro primer viaje</p>
+              <p class="mt-1">Fuimos a la montaña ⛰️. Recuerdo cómo te reías cuando intentabas hacer un muñeco de nieve. Fue nuestro primer viaje juntos y descubrí que eres la mejor compañera de aventuras.</p>
+            </div>
+          </div>
+          
+          <!-- Cuarto evento -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="font-bold text-white text-lg">20/10/2024 - Nuestro aniversario</p>
+              <p class="mt-1">El día que oficialmente comenzamos nuestra relación 💑. Te llevé a ese pequeño café que tanto te gusta y allí te dije lo que sentía por ti.</p>
+            </div>
+          </div>
+          
+          <!-- Quinto evento -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="font-bold text-white text-lg">05/09/2024 - Primer beso</p>
+              <p class="mt-1">Bajo la lluvia ☔, después de meses de amistad, finalmente nos besamos. Fue mágico y desde entonces supe que quería pasar más momentos como ese contigo.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Formulario para añadir nuevos eventos -->
+        <div class="mt-8 glass p-4 rounded-xl">
+          <h3 class="text-xl font-semibold mb-3">Añadir nuevo evento</h3>
+          <div class="space-y-3">
+            <input type="text" id="event-date" placeholder="Fecha (ej: 15/03/2025)" class="w-full p-2 rounded bg-white/20 border border-white/30">
+            <input type="text" id="event-title" placeholder="Título del evento" class="w-full p-2 rounded bg-white/20 border border-white/30">
+            <textarea id="event-description" placeholder="Descripción del evento" class="w-full p-2 rounded bg-white/20 border border-white/30" rows="3"></textarea>
+            <button onclick="addNewEvent()" class="px-4 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition">
+              Añadir Evento <i class="fas fa-plus ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Frases románticas -->
+    <section class="py-10 glass rounded-3xl mx-2 mt-6 p-6 shadow-lg z-10 text-center">
+      <h2 class="text-3xl font-bold mb-4">Frases para ti 💌</h2>
+      <p id="frase" class="text-lg italic"></p>
+      <button onclick="changeQuote()" class="mt-4 px-4 py-1 bg-pink-600/50 rounded-full text-sm hover:bg-pink-700 transition">
+        Otra frase <i class="fas fa-sync-alt ml-1"></i>
+      </button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 glass rounded-3xl mx-2 mt-6 mb-4 text-center shadow-lg z-10">
+      <p class="text-sm">Hecho con ❤️ para ti</p>
+      <p class="text-xs mt-1 opacity-70">© 2025 Nuestra Historia - Todos los derechos reservados</p>
+    </footer>
+  </div>
+
+  <script>
+    // Corazones flotando - modificado para empezar desde arriba
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      heart.textContent = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+    // Aumentamos la frecuencia de corazones
+    setInterval(createHeart, 200);
+
+    // Scroll a galería
+    function scrollToGallery() {
+      document.getElementById('gallery-section').scrollIntoView({behavior: 'smooth'});
+    }
+
+    // Carrusel
+    let currentSlide = 0;
+    let slides = document.querySelectorAll('.carousel-item');
+    let indicators = document.querySelectorAll('.carousel-indicator');
+    let totalSlides = slides.length;
+
+    function updateCarousel() {
+      const carouselInner = document.getElementById('carousel-inner');
+      carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      indicators.forEach((indicator, index) => {
+        indicator.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateCarousel();
+    }
+
+    // Auto avanzar el carrusel cada 5 segundos
+    setInterval(nextSlide, 5000);
+
+    // Subir imagen + fecha
+    const uploadInput = document.getElementById('upload');
+    const carouselInner = document.getElementById('carousel-inner');
+    const carouselIndicators = document.getElementById('carousel-indicators');
+    const timeline = document.getElementById('timeline');
+
+    uploadInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const today = new Date();
+          const fecha = today.toLocaleDateString('es-ES', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+          });
+
+          // Crear nuevo slide
+          const newSlide = document.createElement('div');
+          newSlide.className = "carousel-item";
+          newSlide.innerHTML = `
+            <img src="${reader.result}" alt="Foto subida" class="w-full">
+            <p class="p-2 text-center text-sm mt-2">📅 Subida el ${fecha}</p>
+          `;
+          carouselInner.appendChild(newSlide);
+
+          // Crear nuevo indicador
+          const newIndicator = document.createElement('div');
+          newIndicator.className = "carousel-indicator";
+          newIndicator.onclick = function() { goToSlide(slides.length) };
+          carouselIndicators.appendChild(newIndicator);
+
+          // Actualizar contador de slides
+          slides = document.querySelectorAll('.carousel-item');
+          totalSlides = slides.length;
+
+          // Ir al nuevo slide
+          currentSlide = totalSlides - 1;
+          updateCarousel();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Frases aleatorias
+    const frases = [
+      "Eres mi lugar favorito para volver ❤️",
+      "Si pudiera elegir de nuevo, te volvería a elegir mil veces 💕",
+      "Cada día contigo es el mejor capítulo de mi vida 📖",
+      "Eres mi hoy y todos mis mañanas 🌅",
+      "Amarte es mi mejor decisión 💖",
+      "Contigo descubrí que el amor existe ✨",
+      "Tu sonrisa es mi luz en los días oscuros ☀️",
+      "Eres el sueño que nunca quise dejar de soñar 🌙",
+      "Mi corazón late al ritmo de tu nombre 💓",
+      "En un mundo de temporadas, tú eres mi eterno verano 🌸"
+    ];
+    
+    function changeQuote() {
+      let newQuote;
+      do {
+        newQuote = frases[Math.floor(Math.random() * frases.length)];
+      } while (newQuote === document.getElementById('frase').textContent && frases.length > 1);
+      
+      document.getElementById('frase').textContent = newQuote;
+    }
+    
+    document.getElementById('frase').textContent = frases[Math.floor(Math.random() * frases.length)];
+
+    // Añadir nuevo evento a la línea de tiempo
+    function addNewEvent() {
+      const date = document.getElementById('event-date').value;
+      const title = document.getElementById('event-title').value;
+      const description = document.getElementById('event-description').value;
+      
+      if (date && title && description) {
+        const timelineItem = document.createElement('div');
+        timelineItem.className = "timeline-item";
+        timelineItem.innerHTML = `
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <p class="font-bold text-white text-lg">${date} - ${title}</p>
+            <p class="mt-1">${description}</p>
+          </div>
+        `;
+        
+        // Insertar al principio de la línea de tiempo
+        document.getElementById('timeline').prepend(timelineItem);
+        
+        // Limpiar campos
+        document.getElementById('event-date').value = '';
+        document.getElementById('event-title').value = '';
+        document.getElementById('event-description').value = '';
+      } else {
+        alert('Por favor completa todos los campos');
+      }
+    }
+  </script>
+</body>
+</html>
