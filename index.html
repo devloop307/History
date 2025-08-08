@@ -33,7 +33,7 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    /* Corazones flotantes - modificados para empezar desde arriba */
+    /* Corazones flotantes */
     .heart {
       position: absolute;
       color: rgba(255, 0, 100, 0.8);
@@ -41,11 +41,11 @@
       animation: fall linear forwards;
       opacity: 0.8;
       z-index: 0;
-      top: -30px; /* Empiezan arriba del viewport */
+      top: -30px;
     }
     @keyframes fall {
       to {
-        transform: translateY(calc(100vh + 30px)) rotate(360deg); /* Aseguramos que pasen toda la pantalla */
+        transform: translateY(calc(100vh + 30px)) rotate(360deg);
         opacity: 0;
       }
     }
@@ -147,10 +147,91 @@
       padding: 1rem;
       border-radius: 0.5rem;
       transition: all 0.3s ease;
+      position: relative;
     }
     .timeline-content:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateX(5px);
+    }
+    .edit-buttons {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      display: none;
+    }
+    .timeline-content:hover .edit-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .edit-btn {
+      background: rgba(255, 255, 255, 0.7);
+      border: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .edit-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #ffdde1;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Admin buttons */
+    .admin-panel {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 50;
+    }
+    .admin-btn {
+      background: #ff5e8a;
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+    }
+    .admin-btn:hover {
+      transform: scale(1.1);
     }
 
     /* Responsividad */
@@ -171,6 +252,10 @@
       .main-container {
         padding: 0 0.5rem;
       }
+      .edit-buttons {
+        display: flex !important;
+        gap: 5px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -190,6 +275,54 @@
   </style>
 </head>
 <body class="text-white relative">
+  <!-- Modal para editar eventos -->
+  <div class="modal" id="editModal">
+    <div class="modal-content relative">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h3 class="text-2xl font-bold text-pink-800 mb-4">Editar Evento</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-pink-700 mb-1">Fecha</label>
+          <input type="text" id="edit-event-date" class="w-full p-2 rounded bg-white/80 border border-pink-300 text-gray-800">
+        </div>
+        <div>
+          <label class="block text-pink-700 mb-1">Título</label>
+          <input type="text" id="edit-event-title" class="w-full p-2 rounded bg-white/80 border border-pink-300 text-gray-800">
+        </div>
+        <div>
+          <label class="block text-pink-700 mb-1">Descripción</label>
+          <textarea id="edit-event-description" class="w-full p-2 rounded bg-white/80 border border-pink-300 text-gray-800" rows="4"></textarea>
+        </div>
+        <button onclick="saveEventChanges()" class="px-4 py-2 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition">
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para administrar imágenes -->
+  <div class="modal" id="imageManagerModal">
+    <div class="modal-content relative">
+      <span class="close-modal" onclick="closeImageManager()">&times;</span>
+      <h3 class="text-2xl font-bold text-pink-800 mb-4">Administrar Imágenes</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="image-manager-container">
+        <!-- Las imágenes se cargarán aquí dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de administración -->
+  <div class="admin-panel">
+    <button class="admin-btn" onclick="toggleAdminPanel()">
+      <i class="fas fa-cog"></i>
+    </button>
+    <div id="admin-options" class="hidden absolute bottom-full right-0 mb-2 bg-white rounded-lg shadow-lg p-2 space-y-2">
+      <button onclick="openImageManager()" class="flex items-center px-3 py-1 bg-pink-100 hover:bg-pink-200 rounded text-pink-800 w-full">
+        <i class="fas fa-images mr-2"></i> Gestionar Fotos
+      </button>
+    </div>
+  </div>
+
   <div class="main-container">
     <!-- Portada -->
     <section class="relative h-screen flex flex-col items-center justify-center text-center glass rounded-3xl mx-2 mt-4 p-6 shadow-lg z-10">
@@ -208,18 +341,7 @@
         <!-- Carrusel -->
         <div class="carousel mb-8">
           <div class="carousel-inner" id="carousel-inner">
-            <div class="carousel-item">
-              <img src="https://placekitten.com/800/500" alt="Foto 1" class="w-full">
-              <p class="p-2 text-center text-sm mt-2">📅 Subida el 08/08/2025</p>
-            </div>
-            <div class="carousel-item">
-              <img src="https://placekitten.com/801/500" alt="Foto 2" class="w-full">
-              <p class="p-2 text-center text-sm mt-2">📅 Subida el 07/08/2025</p>
-            </div>
-            <div class="carousel-item">
-              <img src="https://placekitten.com/802/500" alt="Foto 3" class="w-full">
-              <p class="p-2 text-center text-sm mt-2">📅 Subida el 06/08/2025</p>
-            </div>
+            <!-- Las imágenes se cargarán aquí dinámicamente -->
           </div>
           <button class="carousel-control prev" onclick="prevSlide()">
             <i class="fas fa-chevron-left"></i>
@@ -228,9 +350,7 @@
             <i class="fas fa-chevron-right"></i>
           </button>
           <div class="carousel-indicators" id="carousel-indicators">
-            <div class="carousel-indicator active" onclick="goToSlide(0)"></div>
-            <div class="carousel-indicator" onclick="goToSlide(1)"></div>
-            <div class="carousel-indicator" onclick="goToSlide(2)"></div>
+            <!-- Los indicadores se generarán dinámicamente -->
           </div>
         </div>
 
@@ -246,50 +366,7 @@
       <div class="max-w-3xl mx-auto px-2">
         <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
         <div id="timeline" class="space-y-4">
-          <!-- Primer evento -->
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <p class="font-bold text-white text-lg">14/02/2025 - San Valentín</p>
-              <p class="mt-1">Nuestro primer San Valentín juntos ❤️. Te preparé una cena romántica con velas y tu postre favorito. Recuerdo cómo tus ojos brillaban con la luz de las velas.</p>
-            </div>
-          </div>
-          
-          <!-- Segundo evento -->
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <p class="font-bold text-white text-lg">01/01/2025 - Año Nuevo</p>
-              <p class="mt-1">Primer Año Nuevo juntos 🎉. Lo celebramos en la playa, viendo los fuegos artificiales. Prometimos comenzar este año juntos y así será por muchos años más.</p>
-            </div>
-          </div>
-          
-          <!-- Tercer evento -->
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <p class="font-bold text-white text-lg">15/12/2024 - Nuestro primer viaje</p>
-              <p class="mt-1">Fuimos a la montaña ⛰️. Recuerdo cómo te reías cuando intentabas hacer un muñeco de nieve. Fue nuestro primer viaje juntos y descubrí que eres la mejor compañera de aventuras.</p>
-            </div>
-          </div>
-          
-          <!-- Cuarto evento -->
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <p class="font-bold text-white text-lg">20/10/2024 - Nuestro aniversario</p>
-              <p class="mt-1">El día que oficialmente comenzamos nuestra relación 💑. Te llevé a ese pequeño café que tanto te gusta y allí te dije lo que sentía por ti.</p>
-            </div>
-          </div>
-          
-          <!-- Quinto evento -->
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <p class="font-bold text-white text-lg">05/09/2024 - Primer beso</p>
-              <p class="mt-1">Bajo la lluvia ☔, después de meses de amistad, finalmente nos besamos. Fue mágico y desde entonces supe que quería pasar más momentos como ese contigo.</p>
-            </div>
-          </div>
+          <!-- Los eventos se cargarán aquí dinámicamente -->
         </div>
         
         <!-- Formulario para añadir nuevos eventos -->
@@ -324,144 +401,153 @@
   </div>
 
   <script>
-    // Corazones flotando - modificado para empezar desde arriba
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.style.left = Math.random() * window.innerWidth + 'px';
-      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      heart.textContent = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
-    }
-    // Aumentamos la frecuencia de corazones
-    setInterval(createHeart, 200);
-
-    // Scroll a galería
-    function scrollToGallery() {
-      document.getElementById('gallery-section').scrollIntoView({behavior: 'smooth'});
-    }
-
-    // Carrusel
+    // Variables globales
     let currentSlide = 0;
-    let slides = document.querySelectorAll('.carousel-item');
-    let indicators = document.querySelectorAll('.carousel-indicator');
-    let totalSlides = slides.length;
+    let slides = [];
+    let currentEditingEvent = null;
+    let images = JSON.parse(localStorage.getItem('galleryImages')) || [];
+    let events = JSON.parse(localStorage.getItem('timelineEvents')) || [
+      {
+        date: "14/02/2025",
+        title: "San Valentín",
+        description: "Nuestro primer San Valentín juntos ❤️. Te preparé una cena romántica con velas y tu postre favorito. Recuerdo cómo tus ojos brillaban con la luz de las velas."
+      },
+      {
+        date: "01/01/2025",
+        title: "Año Nuevo",
+        description: "Primer Año Nuevo juntos 🎉. Lo celebramos en la playa, viendo los fuegos artificiales. Prometimos comenzar este año juntos y así será por muchos años más."
+      }
+    ];
 
-    function updateCarousel() {
-      const carouselInner = document.getElementById('carousel-inner');
-      carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      loadImages();
+      loadEvents();
+      initHearts();
+      initQuotes();
       
-      indicators.forEach((indicator, index) => {
-        indicator.classList.toggle('active', index === currentSlide);
+      // Configurar el evento para subir imágenes
+      document.getElementById('upload').addEventListener('change', handleImageUpload);
+    });
+
+    // Cargar imágenes desde localStorage
+    function loadImages() {
+      const carouselInner = document.getElementById('carousel-inner');
+      const indicatorsContainer = document.getElementById('carousel-indicators');
+      
+      // Limpiar contenedores
+      carouselInner.innerHTML = '';
+      indicatorsContainer.innerHTML = '';
+      
+      // Si no hay imágenes, mostrar placeholder
+      if (images.length === 0) {
+        images = [
+          { src: 'https://placekitten.com/800/500', date: '08/08/2025' },
+          { src: 'https://placekitten.com/801/500', date: '07/08/2025' },
+          { src: 'https://placekitten.com/802/500', date: '06/08/2025' }
+        ];
+        localStorage.setItem('galleryImages', JSON.stringify(images));
+      }
+      
+      // Crear slides e indicadores
+      images.forEach((image, index) => {
+        const slide = document.createElement('div');
+        slide.className = "carousel-item";
+        slide.innerHTML = `
+          <img src="${image.src}" alt="Foto ${index + 1}" class="w-full">
+          <p class="p-2 text-center text-sm mt-2">📅 Subida el ${image.date}</p>
+        `;
+        carouselInner.appendChild(slide);
+        
+        const indicator = document.createElement('div');
+        indicator.className = "carousel-indicator";
+        indicator.onclick = () => goToSlide(index);
+        indicatorsContainer.appendChild(indicator);
+      });
+      
+      // Actualizar variables
+      slides = document.querySelectorAll('.carousel-item');
+      updateCarousel();
+    }
+
+    // Cargar eventos desde localStorage
+    function loadEvents() {
+      const timelineContainer = document.getElementById('timeline');
+      timelineContainer.innerHTML = '';
+      
+      events.forEach((event, index) => {
+        const eventElement = document.createElement('div');
+        eventElement.className = "timeline-item";
+        eventElement.innerHTML = `
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="edit-buttons">
+              <button class="edit-btn" onclick="editEvent(${index})"><i class="fas fa-edit text-xs"></i></button>
+              <button class="edit-btn" onclick="deleteEvent(${index})"><i class="fas fa-trash text-xs"></i></button>
+            </div>
+            <p class="font-bold text-white text-lg">${event.date} - ${event.title}</p>
+            <p class="mt-1">${event.description}</p>
+          </div>
+        `;
+        timelineContainer.appendChild(eventElement);
       });
     }
 
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      updateCarousel();
-    }
-
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-      updateCarousel();
-    }
-
-    function goToSlide(index) {
-      currentSlide = index;
-      updateCarousel();
-    }
-
-    // Auto avanzar el carrusel cada 5 segundos
-    setInterval(nextSlide, 5000);
-
-    // Subir imagen + fecha
-    const uploadInput = document.getElementById('upload');
-    const carouselInner = document.getElementById('carousel-inner');
-    const carouselIndicators = document.getElementById('carousel-indicators');
-    const timeline = document.getElementById('timeline');
-
-    uploadInput.addEventListener('change', (event) => {
+    // Función para subir imágenes
+    function handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = () => {
+        reader.onload = function(e) {
           const today = new Date();
           const fecha = today.toLocaleDateString('es-ES', {
             day: '2-digit', month: '2-digit', year: 'numeric'
           });
-
-          // Crear nuevo slide
-          const newSlide = document.createElement('div');
-          newSlide.className = "carousel-item";
-          newSlide.innerHTML = `
-            <img src="${reader.result}" alt="Foto subida" class="w-full">
-            <p class="p-2 text-center text-sm mt-2">📅 Subida el ${fecha}</p>
-          `;
-          carouselInner.appendChild(newSlide);
-
-          // Crear nuevo indicador
-          const newIndicator = document.createElement('div');
-          newIndicator.className = "carousel-indicator";
-          newIndicator.onclick = function() { goToSlide(slides.length) };
-          carouselIndicators.appendChild(newIndicator);
-
-          // Actualizar contador de slides
-          slides = document.querySelectorAll('.carousel-item');
-          totalSlides = slides.length;
-
-          // Ir al nuevo slide
-          currentSlide = totalSlides - 1;
-          updateCarousel();
+          
+          // Agregar la nueva imagen al array
+          images.unshift({
+            src: e.target.result,
+            date: fecha
+          });
+          
+          // Guardar en localStorage
+          localStorage.setItem('galleryImages', JSON.stringify(images));
+          
+          // Recargar las imágenes
+          loadImages();
+          
+          // Ir a la primera imagen
+          goToSlide(0);
+          
+          // Añadir evento automático
+          addAutoEvent(fecha);
         };
         reader.readAsDataURL(file);
       }
-    });
-
-    // Frases aleatorias
-    const frases = [
-      "Eres mi lugar favorito para volver ❤️",
-      "Si pudiera elegir de nuevo, te volvería a elegir mil veces 💕",
-      "Cada día contigo es el mejor capítulo de mi vida 📖",
-      "Eres mi hoy y todos mis mañanas 🌅",
-      "Amarte es mi mejor decisión 💖",
-      "Contigo descubrí que el amor existe ✨",
-      "Tu sonrisa es mi luz en los días oscuros ☀️",
-      "Eres el sueño que nunca quise dejar de soñar 🌙",
-      "Mi corazón late al ritmo de tu nombre 💓",
-      "En un mundo de temporadas, tú eres mi eterno verano 🌸"
-    ];
-    
-    function changeQuote() {
-      let newQuote;
-      do {
-        newQuote = frases[Math.floor(Math.random() * frases.length)];
-      } while (newQuote === document.getElementById('frase').textContent && frases.length > 1);
-      
-      document.getElementById('frase').textContent = newQuote;
     }
-    
-    document.getElementById('frase').textContent = frases[Math.floor(Math.random() * frases.length)];
 
-    // Añadir nuevo evento a la línea de tiempo
+    // Añadir evento automático al subir imagen
+    function addAutoEvent(date) {
+      events.unshift({
+        date: date,
+        title: "Momento especial",
+        description: "Guardamos un nuevo recuerdo juntos en nuestra galería 💕"
+      });
+      
+      localStorage.setItem('timelineEvents', JSON.stringify(events));
+      loadEvents();
+    }
+
+    // Añadir nuevo evento manual
     function addNewEvent() {
       const date = document.getElementById('event-date').value;
       const title = document.getElementById('event-title').value;
       const description = document.getElementById('event-description').value;
       
       if (date && title && description) {
-        const timelineItem = document.createElement('div');
-        timelineItem.className = "timeline-item";
-        timelineItem.innerHTML = `
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <p class="font-bold text-white text-lg">${date} - ${title}</p>
-            <p class="mt-1">${description}</p>
-          </div>
-        `;
-        
-        // Insertar al principio de la línea de tiempo
-        document.getElementById('timeline').prepend(timelineItem);
+        events.unshift({ date, title, description });
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+        loadEvents();
         
         // Limpiar campos
         document.getElementById('event-date').value = '';
@@ -471,6 +557,181 @@
         alert('Por favor completa todos los campos');
       }
     }
+
+    // Editar evento
+    function editEvent(index) {
+      currentEditingEvent = index;
+      const event = events[index];
+      
+      document.getElementById('edit-event-date').value = event.date;
+      document.getElementById('edit-event-title').value = event.title;
+      document.getElementById('edit-event-description').value = event.description;
+      
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    // Guardar cambios en evento
+    function saveEventChanges() {
+      const date = document.getElementById('edit-event-date').value;
+      const title = document.getElementById('edit-event-title').value;
+      const description = document.getElementById('edit-event-description').value;
+      
+      if (date && title && description) {
+        events[currentEditingEvent] = { date, title, description };
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+        loadEvents();
+        closeModal();
+      } else {
+        alert('Por favor completa todos los campos');
+      }
+    }
+
+    // Eliminar evento
+    function deleteEvent(index) {
+      if (confirm('¿Estás seguro de que quieres eliminar este evento?')) {
+        events.splice(index, 1);
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+        loadEvents();
+      }
+    }
+
+    // Administrar imágenes
+    function openImageManager() {
+      const container = document.getElementById('image-manager-container');
+      container.innerHTML = '';
+      
+      images.forEach((image, index) => {
+        const imgContainer = document.createElement('div');
+        imgContainer.className = "relative group";
+        imgContainer.innerHTML = `
+          <img src="${image.src}" class="w-full h-32 object-cover rounded-lg">
+          <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+            <button onclick="deleteImage(${index})" class="bg-red-500 text-white p-2 rounded-full">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <p class="text-xs text-center mt-1 text-gray-800">${image.date}</p>
+        `;
+        container.appendChild(imgContainer);
+      });
+      
+      document.getElementById('imageManagerModal').style.display = 'flex';
+      closeAdminPanel();
+    }
+
+    function deleteImage(index) {
+      if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
+        images.splice(index, 1);
+        localStorage.setItem('galleryImages', JSON.stringify(images));
+        
+        if (images.length === 0) {
+          images = [
+            { src: 'https://placekitten.com/800/500', date: '08/08/2025' },
+            { src: 'https://placekitten.com/801/500', date: '07/08/2025' },
+            { src: 'https://placekitten.com/802/500', date: '06/08/2025' }
+          ];
+          localStorage.setItem('galleryImages', JSON.stringify(images));
+        }
+        
+        loadImages();
+        openImageManager();
+      }
+    }
+
+    function closeImageManager() {
+      document.getElementById('imageManagerModal').style.display = 'none';
+    }
+
+    // Funciones del carrusel
+    function updateCarousel() {
+      const carouselInner = document.getElementById('carousel-inner');
+      carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      const indicators = document.querySelectorAll('.carousel-indicator');
+      indicators.forEach((indicator, index) => {
+        indicator.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      updateCarousel();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateCarousel();
+    }
+
+    // Panel de administración
+    function toggleAdminPanel() {
+      const options = document.getElementById('admin-options');
+      options.classList.toggle('hidden');
+    }
+
+    function closeAdminPanel() {
+      document.getElementById('admin-options').classList.add('hidden');
+    }
+
+    // Modal
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    // Corazones flotantes
+    function initHearts() {
+      function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * window.innerWidth + 'px';
+        heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        heart.textContent = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }
+      setInterval(createHeart, 200);
+    }
+
+    // Frases aleatorias
+    function initQuotes() {
+      const frases = [
+        "Eres mi lugar favorito para volver ❤️",
+        "Si pudiera elegir de nuevo, te volvería a elegir mil veces 💕",
+        "Cada día contigo es el mejor capítulo de mi vida 📖",
+        "Eres mi hoy y todos mis mañanas 🌅",
+        "Amarte es mi mejor decisión 💖",
+        "Contigo descubrí que el amor existe ✨",
+        "Tu sonrisa es mi luz en los días oscuros ☀️",
+        "Eres el sueño que nunca quise dejar de soñar 🌙",
+        "Mi corazón late al ritmo de tu nombre 💓",
+        "En un mundo de temporadas, tú eres mi eterno verano 🌸"
+      ];
+      
+      function changeQuote() {
+        let newQuote;
+        do {
+          newQuote = frases[Math.floor(Math.random() * frases.length)];
+        } while (newQuote === document.getElementById('frase').textContent && frases.length > 1);
+        
+        document.getElementById('frase').textContent = newQuote;
+      }
+      
+      document.getElementById('frase').textContent = frases[Math.floor(Math.random() * frases.length)];
+      window.changeQuote = changeQuote;
+    }
+
+    // Scroll a galería
+    window.scrollToGallery = function() {
+      document.getElementById('gallery-section').scrollIntoView({behavior: 'smooth'});
+    };
+
+    // Auto avanzar el carrusel cada 5 segundos
+    setInterval(nextSlide, 5000);
   </script>
 </body>
 </html>
