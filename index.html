@@ -16,12 +16,12 @@
       min-height: 100vh;
     }
 
-    /* Contenedor principal para responsividad */
+    /* Contenedor principal mejorado */
     .main-container {
       max-width: 100%;
       width: 100%;
-      margin: 0 auto;
-      padding: 0 1rem;
+      margin: 0;
+      padding: 0 15px;
       box-sizing: border-box;
     }
 
@@ -31,6 +31,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.3);
+      margin: 10px 0;
     }
 
     /* Corazones flotantes */
@@ -50,11 +51,12 @@
       }
     }
 
-    /* Carrusel */
+    /* Carrusel mejorado */
     .carousel {
       position: relative;
       width: 100%;
       overflow: hidden;
+      border-radius: 1rem;
     }
     .carousel-inner {
       display: flex;
@@ -67,14 +69,14 @@
     .carousel-item img {
       width: 100%;
       height: 400px;
-      object-fit: cover;
-      border-radius: 1rem;
+      object-fit: contain;
+      background-color: rgba(255, 255, 255, 0.3);
     }
     .carousel-control {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.7);
       border: none;
       border-radius: 50%;
       width: 40px;
@@ -85,33 +87,16 @@
       cursor: pointer;
       z-index: 10;
       transition: all 0.3s ease;
+      color: #ff5e8a;
     }
     .carousel-control:hover {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
     }
     .carousel-control.prev {
       left: 15px;
     }
     .carousel-control.next {
       right: 15px;
-    }
-    .carousel-indicators {
-      display: flex;
-      justify-content: center;
-      margin-top: 15px;
-    }
-    .carousel-indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.5);
-      margin: 0 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .carousel-indicator.active {
-      background: rgba(255, 255, 255, 0.9);
-      transform: scale(1.2);
     }
 
     /* Línea de tiempo mejorada */
@@ -209,7 +194,7 @@
       cursor: pointer;
     }
 
-    /* Admin buttons */
+    /* Admin buttons - Posición corregida */
     .admin-panel {
       position: fixed;
       bottom: 20px;
@@ -233,24 +218,27 @@
     .admin-btn:hover {
       transform: scale(1.1);
     }
+    #admin-options {
+      position: absolute;
+      bottom: 60px;
+      right: 0;
+      background: white;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
 
     /* Responsividad */
     @media (max-width: 768px) {
       .carousel-item img {
         height: 300px;
       }
-      .glass {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-      }
       h1 {
         font-size: 2.5rem;
       }
       h2 {
         font-size: 1.8rem;
-      }
-      .main-container {
-        padding: 0 0.5rem;
       }
       .edit-buttons {
         display: flex !important;
@@ -274,7 +262,7 @@
     }
   </style>
 </head>
-<body class="text-white relative">
+<body class="text-white">
   <!-- Modal para editar eventos -->
   <div class="modal" id="editModal">
     <div class="modal-content relative">
@@ -311,12 +299,12 @@
     </div>
   </div>
 
-  <!-- Botón de administración -->
+  <!-- Botón de administración - Posición corregida -->
   <div class="admin-panel">
     <button class="admin-btn" onclick="toggleAdminPanel()">
       <i class="fas fa-cog"></i>
     </button>
-    <div id="admin-options" class="hidden absolute bottom-full right-0 mb-2 bg-white rounded-lg shadow-lg p-2 space-y-2">
+    <div id="admin-options">
       <button onclick="openImageManager()" class="flex items-center px-3 py-1 bg-pink-100 hover:bg-pink-200 rounded text-pink-800 w-full">
         <i class="fas fa-images mr-2"></i> Gestionar Fotos
       </button>
@@ -325,7 +313,7 @@
 
   <div class="main-container">
     <!-- Portada -->
-    <section class="relative h-screen flex flex-col items-center justify-center text-center glass rounded-3xl mx-2 mt-4 p-6 shadow-lg z-10">
+    <section class="relative h-screen flex flex-col items-center justify-center text-center glass p-6 shadow-lg z-10">
       <h1 class="text-4xl md:text-6xl font-[cursive] drop-shadow-lg">Nuestra Historia 💞</h1>
       <p class="mt-4 text-lg md:text-xl">Cada momento contigo es un capítulo hermoso 💖</p>
       <button onclick="scrollToGallery()" class="mt-6 px-6 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition transform hover:scale-105">
@@ -334,11 +322,11 @@
     </section>
 
     <!-- Galería -->
-    <section id="gallery-section" class="py-10 glass rounded-3xl mx-2 mt-6 p-6 shadow-lg z-10">
-      <div class="max-w-5xl mx-auto px-2">
+    <section id="gallery-section" class="py-10 glass p-6 shadow-lg z-10">
+      <div class="max-w-5xl mx-auto">
         <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
         
-        <!-- Carrusel -->
+        <!-- Carrusel simplificado (sin indicadores) -->
         <div class="carousel mb-8">
           <div class="carousel-inner" id="carousel-inner">
             <!-- Las imágenes se cargarán aquí dinámicamente -->
@@ -349,9 +337,6 @@
           <button class="carousel-control next" onclick="nextSlide()">
             <i class="fas fa-chevron-right"></i>
           </button>
-          <div class="carousel-indicators" id="carousel-indicators">
-            <!-- Los indicadores se generarán dinámicamente -->
-          </div>
         </div>
 
         <label class="mt-6 block text-center px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer transform hover:scale-105">
@@ -362,8 +347,8 @@
     </section>
 
     <!-- Línea de tiempo mejorada -->
-    <section class="py-10 glass rounded-3xl mx-2 mt-6 p-6 shadow-lg z-10">
-      <div class="max-w-3xl mx-auto px-2">
+    <section class="py-10 glass p-6 shadow-lg z-10">
+      <div class="max-w-3xl mx-auto">
         <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
         <div id="timeline" class="space-y-4">
           <!-- Los eventos se cargarán aquí dinámicamente -->
@@ -385,7 +370,7 @@
     </section>
 
     <!-- Frases románticas -->
-    <section class="py-10 glass rounded-3xl mx-2 mt-6 p-6 shadow-lg z-10 text-center">
+    <section class="py-10 glass p-6 shadow-lg z-10 text-center">
       <h2 class="text-3xl font-bold mb-4">Frases para ti 💌</h2>
       <p id="frase" class="text-lg italic"></p>
       <button onclick="changeQuote()" class="mt-4 px-4 py-1 bg-pink-600/50 rounded-full text-sm hover:bg-pink-700 transition">
@@ -394,7 +379,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-4 glass rounded-3xl mx-2 mt-6 mb-4 text-center shadow-lg z-10">
+    <footer class="py-4 glass p-6 text-center shadow-lg z-10">
       <p class="text-sm">Hecho con ❤️ para ti</p>
       <p class="text-xs mt-1 opacity-70">© 2025 Nuestra Historia - Todos los derechos reservados</p>
     </footer>
@@ -433,11 +418,9 @@
     // Cargar imágenes desde localStorage
     function loadImages() {
       const carouselInner = document.getElementById('carousel-inner');
-      const indicatorsContainer = document.getElementById('carousel-indicators');
       
-      // Limpiar contenedores
+      // Limpiar contenedor
       carouselInner.innerHTML = '';
-      indicatorsContainer.innerHTML = '';
       
       // Si no hay imágenes, mostrar placeholder
       if (images.length === 0) {
@@ -449,7 +432,7 @@
         localStorage.setItem('galleryImages', JSON.stringify(images));
       }
       
-      // Crear slides e indicadores
+      // Crear slides
       images.forEach((image, index) => {
         const slide = document.createElement('div');
         slide.className = "carousel-item";
@@ -458,11 +441,6 @@
           <p class="p-2 text-center text-sm mt-2">📅 Subida el ${image.date}</p>
         `;
         carouselInner.appendChild(slide);
-        
-        const indicator = document.createElement('div');
-        indicator.className = "carousel-indicator";
-        indicator.onclick = () => goToSlide(index);
-        indicatorsContainer.appendChild(indicator);
       });
       
       // Actualizar variables
@@ -646,11 +624,6 @@
     function updateCarousel() {
       const carouselInner = document.getElementById('carousel-inner');
       carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
-      
-      const indicators = document.querySelectorAll('.carousel-indicator');
-      indicators.forEach((indicator, index) => {
-        indicator.classList.toggle('active', index === currentSlide);
-      });
     }
 
     function nextSlide() {
@@ -671,11 +644,11 @@
     // Panel de administración
     function toggleAdminPanel() {
       const options = document.getElementById('admin-options');
-      options.classList.toggle('hidden');
+      options.style.display = options.style.display === 'block' ? 'none' : 'block';
     }
 
     function closeAdminPanel() {
-      document.getElementById('admin-options').classList.add('hidden');
+      document.getElementById('admin-options').style.display = 'none';
     }
 
     // Modal
@@ -730,8 +703,13 @@
       document.getElementById('gallery-section').scrollIntoView({behavior: 'smooth'});
     };
 
-    // Auto avanzar el carrusel cada 5 segundos
-    setInterval(nextSlide, 5000);
+    // Hacer funciones accesibles globalmente
+    window.prevSlide = prevSlide;
+    window.nextSlide = nextSlide;
+    window.editEvent = editEvent;
+    window.deleteEvent = deleteEvent;
+    window.deleteImage = deleteImage;
+    window.openImageManager = openImageManager;
   </script>
 </body>
 </html>
