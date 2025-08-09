@@ -51,10 +51,11 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  pointer-events: none; /* Permite interactuar con elementos debajo */
+  pointer-events: none;
   overflow: hidden;
-  z-index: 1;
+  z-index: 1; /* Corazones entre el fondo y la galería */
 }
+
 
 .heart {
   position: absolute;
@@ -247,6 +248,19 @@
       color: #ff5e8a;
       z-index: 101;
     }
+
+  #gallery-section .max-w-5xl {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+
+  #gallery-section.glass {
+  position: relative;
+  z-index: 2; /* Encima de los corazones */
+  background: rgba(255, 255, 255, 0.15) !important; /* Transparencia ajustada */
+  backdrop-filter: blur(8px);
+}
 
     /* Grid de imágenes numeradas */
     .image-grid {
@@ -449,8 +463,8 @@
     </section>
 
     <!-- Galería -->
-    <section id="gallery-section" class="relative h-screen py-10 glass p-6 shadow-lg z-10">
-      <div class="max-w-5xl mx-auto">
+    <section id="gallery-section" class="py-10 glass p-6 shadow-lg relative">
+      <div class="max-w-5xl mx-auto bg-white/40 rounded-xl">
         <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
         
         <!-- Carrusel vacío -->
@@ -478,7 +492,7 @@
     </section>
 
     <!-- Línea de tiempo -->
-    <section class="py-10 glass p-6 shadow-lg z-10 relative h-screen">
+    <section class="py-10 glass p-6 shadow-lg z-10">
       <div class="max-w-3xl mx-auto">
         <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
         <div id="timeline" class="space-y-4">
@@ -803,20 +817,19 @@
 
     // Corazones flotantes
     function initHearts() {
-    const heartsContainer = document.getElementById('hearts-container');
-    
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.style.left = Math.random() * window.innerWidth + 'px';
-      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      heart.textContent = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
-      heartsContainer.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
-    }
-    
-    setInterval(createHeart, 200);
+  const heartsContainer = document.getElementById('hearts-container');
+  
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    heart.innerHTML = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
+    heartsContainer.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
   }
+  setInterval(createHeart, 200);
+}
 
     // Frases aleatorias
     function initQuotes() {
