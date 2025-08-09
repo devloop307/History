@@ -16,7 +16,7 @@
       min-height: 100vh;
     }
 
-    /* Contenedor principal mejorado */
+    /* Contenedor principal */
     .main-container {
       max-width: 100%;
       width: 100%;
@@ -51,16 +51,22 @@
       }
     }
 
-    /* Carrusel mejorado */
+    /* Carrusel */
     .carousel {
       position: relative;
       width: 100%;
       overflow: hidden;
       border-radius: 1rem;
+      min-height: 300px;
+      background-color: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .carousel-inner {
       display: flex;
       transition: transform 0.5s ease;
+      width: 100%;
     }
     .carousel-item {
       min-width: 100%;
@@ -70,7 +76,6 @@
       width: 100%;
       height: 400px;
       object-fit: contain;
-      background-color: rgba(255, 255, 255, 0.3);
     }
     .carousel-control {
       position: absolute;
@@ -98,8 +103,13 @@
     .carousel-control.next {
       right: 15px;
     }
+    .empty-gallery {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
 
-    /* Línea de tiempo mejorada */
+    /* Línea de tiempo */
     .timeline-item {
       position: relative;
       padding-left: 2rem;
@@ -163,6 +173,11 @@
     .edit-btn:hover {
       transform: scale(1.1);
     }
+    .empty-timeline {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
 
     /* Modal */
     .modal {
@@ -194,7 +209,7 @@
       cursor: pointer;
     }
 
-    /* Admin buttons - Posición corregida */
+    /* Admin buttons */
     .admin-panel {
       position: fixed;
       bottom: 20px;
@@ -299,7 +314,7 @@
     </div>
   </div>
 
-  <!-- Botón de administración - Posición corregida -->
+  <!-- Botón de administración -->
   <div class="admin-panel">
     <button class="admin-btn" onclick="toggleAdminPanel()">
       <i class="fas fa-cog"></i>
@@ -326,10 +341,14 @@
       <div class="max-w-5xl mx-auto">
         <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
         
-        <!-- Carrusel simplificado (sin indicadores) -->
+        <!-- Carrusel vacío -->
         <div class="carousel mb-8">
           <div class="carousel-inner" id="carousel-inner">
-            <!-- Las imágenes se cargarán aquí dinámicamente -->
+            <div class="empty-gallery">
+              <i class="fas fa-camera text-4xl mb-2"></i>
+              <p>No hay imágenes aún</p>
+              <p class="text-sm mt-2">Sube tu primera foto usando el botón de abajo</p>
+            </div>
           </div>
           <button class="carousel-control prev" onclick="prevSlide()">
             <i class="fas fa-chevron-left"></i>
@@ -346,12 +365,16 @@
       </div>
     </section>
 
-    <!-- Línea de tiempo mejorada -->
+    <!-- Línea de tiempo -->
     <section class="py-10 glass p-6 shadow-lg z-10">
       <div class="max-w-3xl mx-auto">
         <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
         <div id="timeline" class="space-y-4">
-          <!-- Los eventos se cargarán aquí dinámicamente -->
+          <div class="empty-timeline">
+            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+            <p>No hay eventos aún</p>
+            <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
+          </div>
         </div>
         
         <!-- Formulario para añadir nuevos eventos -->
@@ -372,7 +395,7 @@
     <!-- Frases románticas -->
     <section class="py-10 glass p-6 shadow-lg z-10 text-center">
       <h2 class="text-3xl font-bold mb-4">Frases para ti 💌</h2>
-      <p id="frase" class="text-lg italic"></p>
+      <p id="frase" class="text-lg italic">Eres mi lugar favorito para volver ❤️</p>
       <button onclick="changeQuote()" class="mt-4 px-4 py-1 bg-pink-600/50 rounded-full text-sm hover:bg-pink-700 transition">
         Otra frase <i class="fas fa-sync-alt ml-1"></i>
       </button>
@@ -390,19 +413,8 @@
     let currentSlide = 0;
     let slides = [];
     let currentEditingEvent = null;
-    let images = JSON.parse(localStorage.getItem('galleryImages')) || [];
-    let events = JSON.parse(localStorage.getItem('timelineEvents')) || [
-      {
-        date: "14/02/2025",
-        title: "San Valentín",
-        description: "Nuestro primer San Valentín juntos ❤️. Te preparé una cena romántica con velas y tu postre favorito. Recuerdo cómo tus ojos brillaban con la luz de las velas."
-      },
-      {
-        date: "01/01/2025",
-        title: "Año Nuevo",
-        description: "Primer Año Nuevo juntos 🎉. Lo celebramos en la playa, viendo los fuegos artificiales. Prometimos comenzar este año juntos y así será por muchos años más."
-      }
-    ];
+    let images = [];
+    let events = [];
 
     // Inicialización al cargar la página
     document.addEventListener('DOMContentLoaded', function() {
@@ -418,57 +430,87 @@
     // Cargar imágenes desde localStorage
     function loadImages() {
       const carouselInner = document.getElementById('carousel-inner');
+      const savedImages = localStorage.getItem('galleryImages');
+      
+      if (savedImages) {
+        images = JSON.parse(savedImages);
+      } else {
+        images = [];
+        localStorage.setItem('galleryImages', JSON.stringify(images));
+      }
       
       // Limpiar contenedor
       carouselInner.innerHTML = '';
       
-      // Si no hay imágenes, mostrar placeholder
-      if (images.length === 0) {
-        images = [
-          { src: 'https://placekitten.com/800/500', date: '08/08/2025' },
-          { src: 'https://placekitten.com/801/500', date: '07/08/2025' },
-          { src: 'https://placekitten.com/802/500', date: '06/08/2025' }
-        ];
-        localStorage.setItem('galleryImages', JSON.stringify(images));
+      if (images.length > 0) {
+        // Crear slides si hay imágenes
+        images.forEach((image, index) => {
+          const slide = document.createElement('div');
+          slide.className = "carousel-item";
+          slide.innerHTML = `
+            <img src="${image.src}" alt="Foto ${index + 1}" class="w-full">
+            <p class="p-2 text-center text-sm mt-2">📅 Subida el ${image.date}</p>
+          `;
+          carouselInner.appendChild(slide);
+        });
+        
+        // Actualizar variables
+        slides = document.querySelectorAll('.carousel-item');
+      } else {
+        // Mostrar mensaje de galería vacía
+        carouselInner.innerHTML = `
+          <div class="empty-gallery">
+            <i class="fas fa-camera text-4xl mb-2"></i>
+            <p>No hay imágenes aún</p>
+            <p class="text-sm mt-2">Sube tu primera foto usando el botón de abajo</p>
+          </div>
+        `;
       }
       
-      // Crear slides
-      images.forEach((image, index) => {
-        const slide = document.createElement('div');
-        slide.className = "carousel-item";
-        slide.innerHTML = `
-          <img src="${image.src}" alt="Foto ${index + 1}" class="w-full">
-          <p class="p-2 text-center text-sm mt-2">📅 Subida el ${image.date}</p>
-        `;
-        carouselInner.appendChild(slide);
-      });
-      
-      // Actualizar variables
-      slides = document.querySelectorAll('.carousel-item');
       updateCarousel();
     }
 
     // Cargar eventos desde localStorage
     function loadEvents() {
       const timelineContainer = document.getElementById('timeline');
+      const savedEvents = localStorage.getItem('timelineEvents');
+      
+      if (savedEvents) {
+        events = JSON.parse(savedEvents);
+      } else {
+        events = [];
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+      }
+      
       timelineContainer.innerHTML = '';
       
-      events.forEach((event, index) => {
-        const eventElement = document.createElement('div');
-        eventElement.className = "timeline-item";
-        eventElement.innerHTML = `
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <div class="edit-buttons">
-              <button class="edit-btn" onclick="editEvent(${index})"><i class="fas fa-edit text-xs"></i></button>
-              <button class="edit-btn" onclick="deleteEvent(${index})"><i class="fas fa-trash text-xs"></i></button>
+      if (events.length > 0) {
+        events.forEach((event, index) => {
+          const eventElement = document.createElement('div');
+          eventElement.className = "timeline-item";
+          eventElement.innerHTML = `
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="edit-buttons">
+                <button class="edit-btn" onclick="editEvent(${index})"><i class="fas fa-edit text-xs"></i></button>
+                <button class="edit-btn" onclick="deleteEvent(${index})"><i class="fas fa-trash text-xs"></i></button>
+              </div>
+              <p class="font-bold text-white text-lg">${event.date} - ${event.title}</p>
+              <p class="mt-1">${event.description}</p>
             </div>
-            <p class="font-bold text-white text-lg">${event.date} - ${event.title}</p>
-            <p class="mt-1">${event.description}</p>
+          `;
+          timelineContainer.appendChild(eventElement);
+        });
+      } else {
+        // Mostrar mensaje de línea de tiempo vacía
+        timelineContainer.innerHTML = `
+          <div class="empty-timeline">
+            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+            <p>No hay eventos aún</p>
+            <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
           </div>
         `;
-        timelineContainer.appendChild(eventElement);
-      });
+      }
     }
 
     // Función para subir imágenes
@@ -578,20 +620,24 @@
       const container = document.getElementById('image-manager-container');
       container.innerHTML = '';
       
-      images.forEach((image, index) => {
-        const imgContainer = document.createElement('div');
-        imgContainer.className = "relative group";
-        imgContainer.innerHTML = `
-          <img src="${image.src}" class="w-full h-32 object-cover rounded-lg">
-          <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-            <button onclick="deleteImage(${index})" class="bg-red-500 text-white p-2 rounded-full">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-          <p class="text-xs text-center mt-1 text-gray-800">${image.date}</p>
-        `;
-        container.appendChild(imgContainer);
-      });
+      if (images.length > 0) {
+        images.forEach((image, index) => {
+          const imgContainer = document.createElement('div');
+          imgContainer.className = "relative group";
+          imgContainer.innerHTML = `
+            <img src="${image.src}" class="w-full h-32 object-cover rounded-lg">
+            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <button onclick="deleteImage(${index})" class="bg-red-500 text-white p-2 rounded-full">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+            <p class="text-xs text-center mt-1 text-gray-800">${image.date}</p>
+          `;
+          container.appendChild(imgContainer);
+        });
+      } else {
+        container.innerHTML = '<p class="text-center text-gray-800 col-span-3">No hay imágenes para mostrar</p>';
+      }
       
       document.getElementById('imageManagerModal').style.display = 'flex';
       closeAdminPanel();
@@ -601,16 +647,6 @@
       if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
         images.splice(index, 1);
         localStorage.setItem('galleryImages', JSON.stringify(images));
-        
-        if (images.length === 0) {
-          images = [
-            { src: 'https://placekitten.com/800/500', date: '08/08/2025' },
-            { src: 'https://placekitten.com/801/500', date: '07/08/2025' },
-            { src: 'https://placekitten.com/802/500', date: '06/08/2025' }
-          ];
-          localStorage.setItem('galleryImages', JSON.stringify(images));
-        }
-        
         loadImages();
         openImageManager();
       }
@@ -623,22 +659,30 @@
     // Funciones del carrusel
     function updateCarousel() {
       const carouselInner = document.getElementById('carousel-inner');
-      carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+      if (slides.length > 0) {
+        carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+      }
     }
 
     function nextSlide() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      updateCarousel();
+      if (slides.length > 0) {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateCarousel();
+      }
     }
 
     function prevSlide() {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-      updateCarousel();
+      if (slides.length > 0) {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateCarousel();
+      }
     }
 
     function goToSlide(index) {
-      currentSlide = index;
-      updateCarousel();
+      if (slides.length > 0) {
+        currentSlide = index;
+        updateCarousel();
+      }
     }
 
     // Panel de administración
@@ -685,7 +729,7 @@
         "En un mundo de temporadas, tú eres mi eterno verano 🌸"
       ];
       
-      function changeQuote() {
+      window.changeQuote = function() {
         let newQuote;
         do {
           newQuote = frases[Math.floor(Math.random() * frases.length)];
@@ -693,9 +737,6 @@
         
         document.getElementById('frase').textContent = newQuote;
       }
-      
-      document.getElementById('frase').textContent = frases[Math.floor(Math.random() * frases.length)];
-      window.changeQuote = changeQuote;
     }
 
     // Scroll a galería
