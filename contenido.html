@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Historia 💞</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos base */
+    * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    
+   body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(120deg, #ffdde1, #ee9ca7);
+  overflow-x: hidden;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+
+    /* Contenedor principal */
+    .main-container {
+      max-width: 100%;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Fondo glass */
+    .glass {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      margin: 10px auto;
+      width: calc(100% - 20px);
+      max-width: 100%;
+    }
+
+    /* Corazones flotantes */
+    .hearts-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none; /* Permite interactuar con elementos debajo */
+  overflow: hidden;
+  z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  color: rgba(255, 0, 100, 0.8);
+  font-size: 24px;
+  animation: fall linear forwards;
+  opacity: 0.8;
+  z-index: 0;
+  top: -30px;
+  left: 0;
+  transform: translateX(0);
+  will-change: transform; /* Optimización de rendimiento */
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(calc(100vh + 30px)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+    /* Carrusel mejorado */
+    /* Carrusel mejorado */
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 500px; /* Altura fija */
+  overflow: hidden;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%;
+  width: 100%;
+}
+
+.carousel-item {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.carousel-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+    .carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  color: #ff5e8a;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+      .hearts-container {
+    will-change: contents; /* Optimiza animaciones */
+  }
+
+  .heart {
+    will-change: transform, opacity; /* Optimiza propiedades que cambian */
+  }
+  
+    .carousel-control:hover {
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .carousel-control.prev {
+      left: 20px;
+    }
+    .carousel-control.next {
+      right: 20px;
+    }
+    .empty-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+    /* Línea de tiempo */
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 2rem;
+    }
+    .timeline-item:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .timeline-item:last-child:before {
+      height: 1.5rem;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -8px;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ff5e8a;
+      border: 2px solid white;
+    }
+    .timeline-content {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .timeline-content:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateX(5px);
+    }
+    .edit-buttons {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      display: none;
+    }
+    .timeline-content:hover .edit-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .edit-btn {
+      background: rgba(255, 255, 255, 0.7);
+      border: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .edit-btn:hover {
+      transform: scale(1.1);
+    }
+    .empty-timeline {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Modal mejorado */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #ffdde1;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 800px;
+      width: 95%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #ff5e8a;
+      z-index: 101;
+    }
+
+    /* Grid de imágenes numeradas */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 1rem;
+    }
+    .image-container {
+      position: relative;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .image-number {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .image-container img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+    }
+    .image-actions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      padding: 5px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .image-container:hover .image-actions {
+      transform: translateY(0);
+    }
+    .delete-btn {
+      background: #ff5e8a;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Botones de acción */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      transition: all 0.3s;
+      background: #ff5e8a;
+      color: white;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+    }
+    .action-btn:hover {
+      transform: scale(1.05);
+      background: #e04d75;
+    }
+
+    /* Responsividad mejorada */
+    @media (max-width: 768px) {
+      .carousel-item img {
+        height: 300px;
+      }
+      h1 {
+        font-size: 2.5rem;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+      .edit-buttons {
+        display: flex !important;
+        gap: 5px;
+      }
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .carousel-item img {
+        height: 250px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .timeline-item {
+        padding-left: 1.5rem;
+      }
+      .modal-content {
+        padding: 1.5rem;
+      }
+      .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body class="text-white">
+  <!-- Modal para editar eventos -->
+  <div class="hearts-container" id="hearts-container"></div>
+  <div class="modal" id="editModal">
+    <div class="modal-content relative">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h3 class="text-2xl font-bold text-pink-800 mb-4">Editar Evento</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-pink-700 mb-1">Fecha</label>
+          <input type="text" id="edit-event-date" class="w-full p-2 rounded bg-white/80 border border-pink-300 text-gray-800">
+        </div>
+        <div>
+          <label class="block text-pink-700 mb-1">Título</label>
+          <input type="text" id="edit-event-title" class="w-full p-2 rounded bg-white/80 border border-pink-300 text-gray-800">
+        </div>
+        <div>
+          <label class="block text-pink-700 mb-1">Descripción</label>
+          <textarea id="edit-event-description" class="w-full p-2 rounded bg-white/80 border border-pink-300 text-gray-800" rows="4"></textarea>
+        </div>
+        <button onclick="saveEventChanges()" class="px-4 py-2 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition">
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para administrar imágenes - Mejorado -->
+  <div class="modal" id="imageManagerModal">
+    <div class="modal-content relative">
+      <span class="close-modal" onclick="closeImageManager()">&times;</span>
+      <h3 class="text-2xl font-bold text-pink-800 mb-4">Administrar Imágenes</h3>
+      <p class="text-sm text-pink-700 mb-4">Selecciona qué imagen deseas eliminar</p>
+      
+      <div class="image-grid" id="image-manager-container">
+        <!-- Las imágenes se cargarán aquí dinámicamente con números -->
+      </div>
+      
+      <div class="mt-6 text-center">
+        <button onclick="closeImageManager()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <!-- Portada -->
+    <section class="relative h-screen flex flex-col items-center justify-center text-center glass p-6 shadow-lg z-10">
+      <h1 class="text-4xl md:text-6xl font-[cursive] drop-shadow-lg">Nuestra Historia 💞</h1>
+      <p class="mt-4 text-lg md:text-xl">Cada momento contigo es un capítulo hermoso 💖</p>
+      
+      <div class="action-buttons">
+        <button onclick="scrollToGallery()" class="action-btn">
+          <i class="fas fa-images"></i> Ver Galería
+        </button>
+        <button onclick="openImageManager()" class="action-btn">
+          <i class="fas fa-cog"></i> Gestionar Fotos
+        </button>
+      </div>
+    </section>
+
+    <!-- Galería -->
+<section id="gallery-section" class="py-10 glass p-6 shadow-lg z-10">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
+    
+    <!-- Carrusel -->
+    <div class="carousel mb-8">
+      <div class="carousel-inner" id="carousel-inner">
+        <div class="empty-gallery">
+          <i class="fas fa-camera text-4xl mb-2"></i>
+          <p>No hay imágenes aún</p>
+          <p class="text-sm mt-2">Sube tu primera foto usando el botón de abajo</p>
+        </div>
+      </div>
+      <button class="carousel-control prev" onclick="prevSlide()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="carousel-control next" onclick="nextSlide()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <label class="mt-6 block text-center px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer transform hover:scale-105">
+      📸 Subir Foto
+      <input type="file" accept="image/*" class="hidden" id="upload" multiple>
+    </label>
+  </div>
+</section>
+
+    <!-- Línea de tiempo -->
+    <section class="py-10 glass p-6 shadow-lg z-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
+        <div id="timeline" class="space-y-4">
+          <div class="empty-timeline">
+            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+            <p>No hay eventos aún</p>
+            <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
+          </div>
+        </div>
+        
+        <!-- Formulario para añadir nuevos eventos -->
+        <div class="mt-8 glass p-4 rounded-xl">
+  <h3 class="text-xl font-semibold mb-3">Añadir nuevo evento</h3>
+  <div class="space-y-3">
+    <input type="text" id="event-date" placeholder="Fecha (ej: 15/03/2025)" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
+    <input type="text" id="event-title" placeholder="Título del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
+    <textarea id="event-description" placeholder="Descripción del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black" rows="3"></textarea>
+    
+    <!-- Botón centrado -->
+    <div class="flex justify-center">
+      <button onclick="addNewEvent()" class="px-4 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition">
+        Añadir Evento <i class="fas fa-plus ml-1"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Frases románticas -->
+    <section class="py-10 glass p-6 shadow-lg z-10 text-center">
+      <h2 class="text-3xl font-bold mb-4">Frases para ti 💌</h2>
+      <p id="frase" class="text-lg italic">Eres mi lugar favorito para volver ❤️</p>
+      <button onclick="changeQuote()" class="mt-4 px-4 py-1 bg-pink-600/50 rounded-full text-sm hover:bg-pink-700 transition">
+        Otra frase <i class="fas fa-sync-alt ml-1"></i>
+      </button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 glass p-6 text-center shadow-lg z-10">
+      <p class="text-sm">Hecho con mucho ❤️ para ti</p>
+      <p class="text-xs mt-1 opacity-70">© 2025 Nuestra Historia - Todos los derechos reservados</p>
+    </footer>
+  </div>
+
+  <script>
+    // Variables globales
+    let currentSlide = 0;
+    let slides = [];
+    let currentEditingEvent = null;
+    let images = [];
+    let events = [];
+
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      loadImages();
+      loadEvents();
+      initHearts();
+      initQuotes();
+      
+      // Configurar el evento para subir imágenes
+      document.getElementById('upload').addEventListener('change', handleImageUpload);
+    });
+
+    // Cargar imágenes desde localStorage
+    // Función mejorada para cargar imágenes
+function loadImages() {
+  const carouselInner = document.getElementById('carousel-inner');
+  const savedImages = localStorage.getItem('galleryImages');
+  
+  images = savedImages ? JSON.parse(savedImages) : [];
+  carouselInner.innerHTML = '';
+  
+  if (images.length > 0) {
+    images.forEach((image) => {
+      const slide = document.createElement('div');
+      slide.className = "carousel-item";
+      slide.innerHTML = `
+        <img src="${image.src}" alt="Foto" class="w-full h-full object-contain">
+        <p class="text-center py-2 text-white bg-black/30">${image.date}</p>
+      `;
+      carouselInner.appendChild(slide);
+    });
+    
+    slides = document.querySelectorAll('.carousel-item');
+    currentSlide = 0;
+    updateCarousel();
+  } else {
+    carouselInner.innerHTML = `
+      <div class="empty-gallery">
+        <i class="fas fa-camera text-4xl mb-2"></i>
+        <p>No hay imágenes aún</p>
+      </div>
+    `;
+  }
+}
+
+// Función para manejar la subida de imágenes
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.src = e.target.result;
+    
+    img.onload = function() {
+      // Redimensionar si es muy grande (opcional)
+      const MAX_SIZE = 2000;
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d');
+      
+      if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+        const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      } else {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      }
+      
+      const today = new Date().toLocaleDateString('es-ES');
+      images.unshift({
+        src: canvas.toDataURL('image/jpeg', 0.8), // Comprime la imagen
+        date: today
+      });
+      
+      localStorage.setItem('galleryImages', JSON.stringify(images));
+      loadImages();
+      goToSlide(0);
+    };
+  };
+  reader.readAsDataURL(file);
+}
+    // Cargar eventos desde localStorage
+    function loadEvents() {
+      const timelineContainer = document.getElementById('timeline');
+      const savedEvents = localStorage.getItem('timelineEvents');
+      
+      if (savedEvents) {
+        events = JSON.parse(savedEvents);
+      } else {
+        events = [];
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+      }
+      
+      timelineContainer.innerHTML = '';
+      
+      if (events.length > 0) {
+        events.forEach((event, index) => {
+          const eventElement = document.createElement('div');
+          eventElement.className = "timeline-item";
+          eventElement.innerHTML = `
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="edit-buttons">
+                <button class="edit-btn" onclick="editEvent(${index})"><i class="fas fa-edit text-xs"></i></button>
+                <button class="edit-btn" onclick="deleteEvent(${index})"><i class="fas fa-trash text-xs"></i></button>
+              </div>
+              <p class="font-bold text-white text-lg">${event.date} - ${event.title}</p>
+              <p class="mt-1">${event.description}</p>
+            </div>
+          `;
+          timelineContainer.appendChild(eventElement);
+        });
+      } else {
+        // Mostrar mensaje de línea de tiempo vacía
+        timelineContainer.innerHTML = `
+          <div class="empty-timeline">
+            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+            <p>No hay eventos aún</p>
+            <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
+          </div>
+        `;
+      }
+    }
+
+    // Función para subir imágenes
+    function handleImageUpload(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+
+  // Procesar cada imagen seleccionada
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+      const img = new Image();
+      img.src = e.target.result;
+      
+      img.onload = function() {
+        // Redimensionar si es muy grande (máximo 2000px)
+        const MAX_SIZE = 2000;
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+          const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+        } else {
+          canvas.width = img.width;
+          canvas.height = img.height;
+        }
+        
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        const today = new Date().toLocaleDateString('es-ES');
+        images.unshift({
+          src: canvas.toDataURL('image/jpeg', 0.8), // 80% de calidad
+          date: today
+        });
+        
+        // Guardar solo después de procesar todas
+        if (Array.from(files).indexOf(file) === files.length - 1) {
+          localStorage.setItem('galleryImages', JSON.stringify(images));
+          loadImages();
+          goToSlide(0);
+        }
+      };
+    };
+    reader.readAsDataURL(file);
+  });
+}
+  // Añadir evento automático al subir imagen
+    function addAutoEvent(date) {
+      events.unshift({
+        date: date,
+        title: "Momento especial",
+        description: "Guardamos un nuevo recuerdo juntos en nuestra galería 💕"
+      });
+      
+      localStorage.setItem('timelineEvents', JSON.stringify(events));
+      loadEvents();
+    }
+
+    // Añadir nuevo evento manual
+    function addNewEvent() {
+      const date = document.getElementById('event-date').value;
+      const title = document.getElementById('event-title').value;
+      const description = document.getElementById('event-description').value;
+      
+      if (date && title && description) {
+        events.unshift({ date, title, description });
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+        loadEvents();
+        
+        // Limpiar campos
+        document.getElementById('event-date').value = '';
+        document.getElementById('event-title').value = '';
+        document.getElementById('event-description').value = '';
+      } else {
+        alert('Por favor completa todos los campos');
+      }
+    }
+
+    // Editar evento
+    function editEvent(index) {
+      currentEditingEvent = index;
+      const event = events[index];
+      
+      document.getElementById('edit-event-date').value = event.date;
+      document.getElementById('edit-event-title').value = event.title;
+      document.getElementById('edit-event-description').value = event.description;
+      
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    // Guardar cambios en evento
+    function saveEventChanges() {
+      const date = document.getElementById('edit-event-date').value;
+      const title = document.getElementById('edit-event-title').value;
+      const description = document.getElementById('edit-event-description').value;
+      
+      if (date && title && description) {
+        events[currentEditingEvent] = { date, title, description };
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+        loadEvents();
+        closeModal();
+      } else {
+        alert('Por favor completa todos los campos');
+      }
+    }
+
+    // Eliminar evento
+    function deleteEvent(index) {
+      if (confirm('¿Estás seguro de que quieres eliminar este evento?')) {
+        events.splice(index, 1);
+        localStorage.setItem('timelineEvents', JSON.stringify(events));
+        loadEvents();
+      }
+    }
+
+    // Administrar imágenes - Versión mejorada con números
+    function openImageManager() {
+      const container = document.getElementById('image-manager-container');
+      container.innerHTML = '';
+      
+      if (images.length > 0) {
+        images.forEach((image, index) => {
+          const imgContainer = document.createElement('div');
+          imgContainer.className = "image-container";
+          imgContainer.innerHTML = `
+            <div class="image-number">${index + 1}</div>
+            <img src="${image.src}" alt="Imagen ${index + 1}">
+            <div class="image-actions">
+              <button onclick="deleteImage(${index})" class="delete-btn">
+                <i class="fas fa-trash"></i> Eliminar
+              </button>
+            </div>
+          `;
+          container.appendChild(imgContainer);
+        });
+      } else {
+        container.innerHTML = '<p class="text-center text-gray-800 col-span-3 py-10">No hay imágenes para mostrar</p>';
+      }
+      
+      document.getElementById('imageManagerModal').style.display = 'flex';
+    }
+
+    function deleteImage(index) {
+      if (confirm(`¿Estás seguro de que quieres eliminar la imagen ${index + 1}?`)) {
+        images.splice(index, 1);
+        localStorage.setItem('galleryImages', JSON.stringify(images));
+        loadImages();
+        openImageManager();
+      }
+    }
+
+    function closeImageManager() {
+      document.getElementById('imageManagerModal').style.display = 'none';
+    }
+
+    // Funciones del carrusel
+    function updateCarousel() {
+  const carouselInner = document.getElementById('carousel-inner');
+  if (slides.length > 0) {
+    carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+  }
+}
+
+    function nextSlide() {
+      if (slides.length > 0) {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateCarousel();
+      }
+    }
+
+    function prevSlide() {
+      if (slides.length > 0) {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateCarousel();
+      }
+    }
+
+    function goToSlide(index) {
+      if (slides.length > 0) {
+        currentSlide = index;
+        updateCarousel();
+      }
+    }
+
+    // Modal
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    // Corazones flotantes
+    function initHearts() {
+    const heartsContainer = document.getElementById('hearts-container');
+    
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      heart.textContent = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+    
+    setInterval(createHeart, 300);
+  }
+
+    // Frases aleatorias
+    function initQuotes() {
+      const frases = [
+        "Eres mi lugar favorito para volver ❤️",
+        "Si pudiera elegir de nuevo, te volvería a elegir mil veces 💕",
+        "Cada día contigo es el mejor capítulo de mi vida 📖",
+        "Eres mi hoy y todos mis mañanas 🌅",
+        "Amarte es mi mejor decisión 💖",
+        "Contigo descubrí que el amor existe ✨",
+        "Tu sonrisa es mi luz en los días oscuros ☀️",
+        "Eres el sueño que nunca quise dejar de soñar 🌙",
+        "Mi corazón late al ritmo de tu nombre 💓",
+        "En un mundo de temporadas, tú eres mi eterno verano 🌸"
+      ];
+      
+      window.changeQuote = function() {
+        let newQuote;
+        do {
+          newQuote = frases[Math.floor(Math.random() * frases.length)];
+        } while (newQuote === document.getElementById('frase').textContent && frases.length > 1);
+        
+        document.getElementById('frase').textContent = newQuote;
+      }
+    }
+
+    // Scroll a galería
+    window.scrollToGallery = function() {
+      document.getElementById('gallery-section').scrollIntoView({behavior: 'smooth'});
+    };
+
+    // Hacer funciones accesibles globalmente
+    window.prevSlide = prevSlide;
+    window.nextSlide = nextSlide;
+    window.editEvent = editEvent;
+    window.deleteEvent = deleteEvent;
+    window.deleteImage = deleteImage;
+    window.openImageManager = openImageManager;
+  </script>
+</body>
+</html>
