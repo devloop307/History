@@ -77,18 +77,58 @@
 }
 
     /* Carrusel */
-    .carousel {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      border-radius: 1rem;
-      min-height: 300px;
-      background-color: rgba(255, 255, 255, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-    }
+    /* Carrusel mejorado */
+.carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  min-height: 400px; /* Altura fija para todas las imágenes */
+  background-color: rgba(255, 255, 255, 0.3);
+  margin: 0 auto;
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%; /* Asegura que ocupe todo el alto */
+}
+
+.carousel-item {
+  min-width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Mantiene proporciones */
+  max-height: 400px; /* Limita altura máxima */
+  padding: 20px; /* Espacio alrededor */
+}
+
+/* Controles siempre visibles */
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20; /* Por encima de todo */
+  color: #ff5e8a;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
       .hearts-container {
     will-change: contents; /* Optimiza animaciones */
   }
@@ -96,38 +136,7 @@
   .heart {
     will-change: transform, opacity; /* Optimiza propiedades que cambian */
   }
-    .carousel-inner {
-      display: flex;
-      transition: transform 0.5s ease;
-      width: 100%;
-    }
-    .carousel-item {
-      min-width: 100%;
-      position: relative;
-    }
-    .carousel-item img {
-      width: 100%;
-      height: 400px;
-      object-fit: contain;
-      max-width: 100%;
-    }
-    .carousel-control {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.7);
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      transition: all 0.3s ease;
-      color: #ff5e8a;
-    }
+  
     .carousel-control:hover {
       background: rgba(255, 255, 255, 0.9);
     }
@@ -472,7 +481,7 @@
 
         <label class="mt-6 block text-center px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer transform hover:scale-105">
           📸 Subir Foto
-          <input type="file" accept="image/*" class="hidden" id="upload">
+          <input type="file" accept="image/*" class="hidden" id="upload" multiple>
         </label>
       </div>
     </section>
@@ -540,38 +549,77 @@
     });
 
     // Cargar imágenes desde localStorage
-    function loadImages() {
+    // Función mejorada para cargar imágenes
+function loadImages() {
   const carouselInner = document.getElementById('carousel-inner');
   const savedImages = localStorage.getItem('galleryImages');
   
   images = savedImages ? JSON.parse(savedImages) : [];
-  localStorage.setItem('galleryImages', JSON.stringify(images));
-  
   carouselInner.innerHTML = '';
   
   if (images.length > 0) {
-    images.forEach((image, index) => {
+    images.forEach((image) => {
       const slide = document.createElement('div');
       slide.className = "carousel-item";
       slide.innerHTML = `
-        <img src="${image.src}" alt="Foto ${index + 1}" class="w-full h-full object-contain">
-        <p class="p-2 text-center text-sm mt-2">📅 ${image.date}</p>
+        <img src="${image.src}" alt="Foto" class="w-full h-full object-contain">
+        <p class="text-center py-2 text-white bg-black/30">${image.date}</p>
       `;
       carouselInner.appendChild(slide);
     });
     
     slides = document.querySelectorAll('.carousel-item');
     currentSlide = 0;
-    updateCarousel(); // Asegúrate de que esta línea esté presente
+    updateCarousel();
   } else {
     carouselInner.innerHTML = `
       <div class="empty-gallery">
         <i class="fas fa-camera text-4xl mb-2"></i>
         <p>No hay imágenes aún</p>
-        <p class="text-sm mt-2">Sube tu primera foto</p>
       </div>
     `;
   }
+}
+
+// Función para manejar la subida de imágenes
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.src = e.target.result;
+    
+    img.onload = function() {
+      // Redimensionar si es muy grande (opcional)
+      const MAX_SIZE = 2000;
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d');
+      
+      if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+        const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      } else {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      }
+      
+      const today = new Date().toLocaleDateString('es-ES');
+      images.unshift({
+        src: canvas.toDataURL('image/jpeg', 0.8), // Comprime la imagen
+        date: today
+      });
+      
+      localStorage.setItem('galleryImages', JSON.stringify(images));
+      loadImages();
+      goToSlide(0);
+    };
+  };
+  reader.readAsDataURL(file);
 }
     // Cargar eventos desde localStorage
     function loadEvents() {
@@ -618,37 +666,44 @@
 
     // Función para subir imágenes
     function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const today = new Date();
-          const fecha = today.toLocaleDateString('es-ES', {
-            day: '2-digit', month: '2-digit', year: 'numeric'
-          });
-          
-          // Agregar la nueva imagen al array
-          images.unshift({
-            src: e.target.result,
-            date: fecha
-          });
-          
-          // Guardar en localStorage
-          localStorage.setItem('galleryImages', JSON.stringify(images));
-          
-          // Recargar las imágenes
-          loadImages();
-          
-          // Ir a la primera imagen
-          goToSlide(0);
-          
-          // Añadir evento automático
-          addAutoEvent(fecha);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+  const file = event.target.files[0];
+  if (!file) return;
 
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.src = e.target.result;
+    
+    img.onload = function() {
+      // Redimensionar si es muy grande (opcional)
+      const MAX_SIZE = 2000;
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d');
+      
+      if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+        const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      } else {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      }
+      
+      const today = new Date().toLocaleDateString('es-ES');
+      images.unshift({
+        src: canvas.toDataURL('image/jpeg', 0.8), // Comprime la imagen
+        date: today
+      });
+      
+      localStorage.setItem('galleryImages', JSON.stringify(images));
+      loadImages();
+      goToSlide(0);
+    };
+  };
+  reader.readAsDataURL(file);
+}
     // Añadir evento automático al subir imagen
     function addAutoEvent(date) {
       events.unshift({
@@ -806,7 +861,7 @@
       setTimeout(() => heart.remove(), 5000);
     }
     
-    setInterval(createHeart, 200);
+    setInterval(createHeart, 300);
   }
 
     // Frases aleatorias
