@@ -75,6 +75,8 @@
     opacity: 0;
   }
 }
+
+    /* Carrusel mejorado */
     /* Carrusel mejorado */
 .carousel {
   position: relative;
@@ -101,26 +103,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* Cambiado de 'center' a 'space-between' */
-  padding: 10px 20px; /* Reducir padding vertical */
+  justify-content: center;
+  padding: 20px;
   box-sizing: border-box;
 }
 
 .carousel-item img {
   max-width: 100%;
-  max-height: calc(100% - 40px); /* Reservar espacio para la fecha */
+  max-height: 100%;
   object-fit: contain;
   border-radius: 0.5rem;
 }
-
-.carousel-item p {
-  margin: 5px 0 0 0;
-  padding: 5px 10px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 1rem;
-  font-size: 0.9rem;
-}
-  .carousel-control {
+    .carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -494,17 +488,10 @@
       </button>
     </div>
 
-    <!-- Botones mejorados para móvil -->
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <label class="px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer text-center">
-        📸 Desde Galería
-        <input type="file" accept="image/*" class="hidden" id="upload-gallery" multiple>
-      </label>
-      <label class="px-6 py-2 bg-pink-700 text-white rounded-full shadow hover:bg-pink-800 transition cursor-pointer text-center">
-        📷 Tomar Foto
-        <input type="file" accept="image/*" capture="environment" class="hidden" id="upload-camera">
-      </label>
-    </div>
+    <label class="mt-6 block text-center px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer transform hover:scale-105">
+      📸 Subir Foto
+      <input type="file" accept="image/*" class="hidden" id="upload" multiple>
+    </label>
   </div>
 </section>
 
@@ -568,8 +555,6 @@
       
       // Configurar el evento para subir imágenes
       document.getElementById('upload').addEventListener('change', handleImageUpload);
-      document.getElementById('upload-gallery').addEventListener('change', handleImageUpload);
-       document.getElementById('upload-camera').addEventListener('change', handleImageUpload);
     });
 
     // Cargar imágenes desde localStorage
@@ -607,62 +592,45 @@ function loadImages() {
 
 // Función para manejar la subida de imágenes
 function handleImageUpload(event) {
-  const files = event.target.files;
-  if (!files || files.length === 0) return;
+  const file = event.target.files[0];
+  if (!file) return;
 
-  // Mostrar loader
-  const carouselInner = document.getElementById('carousel-inner');
-  carouselInner.innerHTML = `
-    <div class="empty-gallery">
-      <i class="fas fa-spinner fa-spin text-4xl mb-2"></i>
-      <p>Procesando imágenes...</p>
-    </div>
-  `;
-
-  // Procesar imágenes en paralelo
-  const processPromises = Array.from(files).map(file => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.src = e.target.result;
-        
-        img.onload = function() {
-          const MAX_SIZE = 1600;
-          let canvas = document.createElement('canvas');
-          let ctx = canvas.getContext('2d');
-          
-          // Redimensionar manteniendo proporciones
-          if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
-            const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
-            canvas.width = img.width * ratio;
-            canvas.height = img.height * ratio;
-          } else {
-            canvas.width = img.width;
-            canvas.height = img.height;
-          }
-          
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-          resolve({
-            src: canvas.toDataURL('image/jpeg', 0.85),
-            date: new Date().toLocaleDateString('es-ES')
-          });
-        };
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-
-  // Cuando todas las imágenes estén procesadas
-  Promise.all(processPromises).then(processedImages => {
-    images.unshift(...processedImages);
-    localStorage.setItem('galleryImages', JSON.stringify(images));
-    loadImages();
-    goToSlide(0);
-  });
-} 
-   // Cargar eventos desde localStorage
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.src = e.target.result;
+    
+    img.onload = function() {
+      // Redimensionar si es muy grande (opcional)
+      const MAX_SIZE = 2000;
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d');
+      
+      if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+        const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      } else {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      }
+      
+      const today = new Date().toLocaleDateString('es-ES');
+      images.unshift({
+        src: canvas.toDataURL('image/jpeg', 0.8), // Comprime la imagen
+        date: today
+      });
+      
+      localStorage.setItem('galleryImages', JSON.stringify(images));
+      loadImages();
+      goToSlide(0);
+    };
+  };
+  reader.readAsDataURL(file);
+}
+    // Cargar eventos desde localStorage
     function loadEvents() {
       const timelineContainer = document.getElementById('timeline');
       const savedEvents = localStorage.getItem('timelineEvents');
