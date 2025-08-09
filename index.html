@@ -209,49 +209,24 @@
       cursor: pointer;
     }
 
-    /* Admin buttons */
-   .admin-panel {
-  position: fixed;
-  bottom: 20px;
-  right: 50%;
-  transform: translateX(50%);
-  z-index: 50;
-}
-.admin-panel-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-    .admin-btn {
-      background: #ff5e8a;
-      color: white;
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+    /* Botones de acción */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .action-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
       transition: all 0.3s;
     }
-    .admin-btn:hover {
-      transform: scale(1.1);
+    .action-btn:hover {
+      transform: scale(1.05);
     }
-   #admin-options {
-  position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  display: none;
-  max-width: 200px;
-  width: max-content;
-}
 
     /* Responsividad */
     @media (max-width: 768px) {
@@ -267,6 +242,10 @@
       .edit-buttons {
         display: flex !important;
         gap: 5px;
+      }
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
       }
     }
 
@@ -323,29 +302,20 @@
     </div>
   </div>
 
-  <!-- Botón de administración -->
-  <div class="admin-panel">
-    <div class="admin-panel-inner">
-      <button class="admin-btn" onclick="toggleAdminPanel()">
-        <i class="fas fa-cog"></i>
-      </button>
-      <div id="admin-options">
-        <button onclick="openImageManager()" class="flex items-center px-3 py-1 bg-pink-100 hover:bg-pink-200 rounded text-pink-800 w-full">
-          <i class="fas fa-images mr-2"></i> Gestionar Fotos
-        </button>
-      </div>
-    </div>
-  </div>
-
-
   <div class="main-container">
     <!-- Portada -->
     <section class="relative h-screen flex flex-col items-center justify-center text-center glass p-6 shadow-lg z-10">
       <h1 class="text-4xl md:text-6xl font-[cursive] drop-shadow-lg">Nuestra Historia 💞</h1>
       <p class="mt-4 text-lg md:text-xl">Cada momento contigo es un capítulo hermoso 💖</p>
-      <button onclick="scrollToGallery()" class="mt-6 px-6 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition transform hover:scale-105">
-        Ver Galería 📸
-      </button>
+      
+      <div class="action-buttons">
+        <button onclick="scrollToGallery()" class="action-btn bg-pink-600 hover:bg-pink-700">
+          <i class="fas fa-images"></i> Ver Galería
+        </button>
+        <button onclick="openImageManager()" class="action-btn bg-pink-500 hover:bg-pink-600">
+          <i class="fas fa-cog"></i> Gestionar Fotos
+        </button>
+      </div>
     </section>
 
     <!-- Galería -->
@@ -652,13 +622,18 @@
       }
       
       document.getElementById('imageManagerModal').style.display = 'flex';
-      closeAdminPanel();
     }
 
     function deleteImage(index) {
       if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
         images.splice(index, 1);
         localStorage.setItem('galleryImages', JSON.stringify(images));
+        
+        if (images.length === 0) {
+          images = [];
+          localStorage.setItem('galleryImages', JSON.stringify(images));
+        }
+        
         loadImages();
         openImageManager();
       }
@@ -695,16 +670,6 @@
         currentSlide = index;
         updateCarousel();
       }
-    }
-
-    // Panel de administración
-    function toggleAdminPanel() {
-      const options = document.getElementById('admin-options');
-      options.style.display = options.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function closeAdminPanel() {
-      document.getElementById('admin-options').style.display = 'none';
     }
 
     // Modal
