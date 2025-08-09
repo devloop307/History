@@ -75,43 +75,52 @@
     opacity: 0;
   }
 }
-
-    /* Carrusel */
     /* Carrusel mejorado */
 .carousel {
   position: relative;
   width: 100%;
+  height: 500px; /* Altura fija */
   overflow: hidden;
   border-radius: 1rem;
-  min-height: 400px; /* Altura fija para todas las imágenes */
   background-color: rgba(255, 255, 255, 0.3);
-  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .carousel-inner {
   display: flex;
   transition: transform 0.5s ease;
-  height: 100%; /* Asegura que ocupe todo el alto */
+  height: 100%;
+  width: 100%;
 }
 
 .carousel-item {
   min-width: 100%;
-  position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between; /* Cambiado de 'center' a 'space-between' */
+  padding: 10px 20px; /* Reducir padding vertical */
+  box-sizing: border-box;
 }
 
 .carousel-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* Mantiene proporciones */
-  max-height: 400px; /* Limita altura máxima */
-  padding: 20px; /* Espacio alrededor */
+  max-width: 100%;
+  max-height: calc(100% - 40px); /* Reservar espacio para la fecha */
+  object-fit: contain;
+  border-radius: 0.5rem;
 }
 
-/* Controles siempre visibles */
-.carousel-control {
+.carousel-item p {
+  margin: 5px 0 0 0;
+  padding: 5px 10px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 1rem;
+  font-size: 0.9rem;
+}
+  .carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -124,11 +133,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 20; /* Por encima de todo */
+  z-index: 20;
   color: #ff5e8a;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
+
       .hearts-container {
     will-change: contents; /* Optimiza animaciones */
   }
@@ -141,16 +151,21 @@
       background: rgba(255, 255, 255, 0.9);
     }
     .carousel-control.prev {
-      left: 15px;
+      left: 20px;
     }
     .carousel-control.next {
-      right: 15px;
+      right: 20px;
     }
     .empty-gallery {
-      text-align: center;
-      padding: 2rem;
-      color: rgba(255, 255, 255, 0.7);
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+}
 
     /* Línea de tiempo */
     .timeline-item {
@@ -457,34 +472,41 @@
       </div>
     </section>
 
-      <!-- Galería -->
-    <section id="gallery-section" class="py-10 glass p-6 shadow-lg z-10">
-      <div class="max-w-5xl mx-auto">
-        <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
-        
-        <!-- Carrusel vacío -->
-        <div class="carousel mb-8">
-          <div class="carousel-inner" id="carousel-inner">
-            <div class="empty-gallery">
-              <i class="fas fa-camera text-4xl mb-2"></i>
-              <p>No hay imágenes aún</p>
-              <p class="text-sm mt-2">Sube tu primera foto usando el botón de abajo</p>
-            </div>
-          </div>
-          <button class="carousel-control prev" onclick="prevSlide()">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="carousel-control next" onclick="nextSlide()">
-            <i class="fas fa-chevron-right"></i>
-          </button>
+    <!-- Galería -->
+<section id="gallery-section" class="py-10 glass p-6 shadow-lg z-10">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
+    
+    <!-- Carrusel -->
+    <div class="carousel mb-8">
+      <div class="carousel-inner" id="carousel-inner">
+        <div class="empty-gallery">
+          <i class="fas fa-camera text-4xl mb-2"></i>
+          <p>No hay imágenes aún</p>
+          <p class="text-sm mt-2">Sube tu primera foto usando el botón de abajo</p>
         </div>
-
-        <label class="mt-6 block text-center px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer transform hover:scale-105">
-          📸 Subir Foto
-          <input type="file" accept="image/*" class="hidden" id="upload">
-        </label>
       </div>
-    </section>
+      <button class="carousel-control prev" onclick="prevSlide()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="carousel-control next" onclick="nextSlide()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Botones mejorados para móvil -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <label class="px-6 py-2 bg-pink-600 text-white rounded-full shadow hover:bg-pink-700 transition cursor-pointer text-center">
+        📸 Desde Galería
+        <input type="file" accept="image/*" class="hidden" id="upload-gallery" multiple>
+      </label>
+      <label class="px-6 py-2 bg-pink-700 text-white rounded-full shadow hover:bg-pink-800 transition cursor-pointer text-center">
+        📷 Tomar Foto
+        <input type="file" accept="image/*" capture="environment" class="hidden" id="upload-camera">
+      </label>
+    </div>
+  </div>
+</section>
 
     <!-- Línea de tiempo -->
     <section class="py-10 glass p-6 shadow-lg z-10">
@@ -546,6 +568,8 @@
       
       // Configurar el evento para subir imágenes
       document.getElementById('upload').addEventListener('change', handleImageUpload);
+      document.getElementById('upload-gallery').addEventListener('change', handleImageUpload);
+       document.getElementById('upload-camera').addEventListener('change', handleImageUpload);
     });
 
     // Cargar imágenes desde localStorage
@@ -583,45 +607,62 @@ function loadImages() {
 
 // Función para manejar la subida de imágenes
 function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = new Image();
-    img.src = e.target.result;
-    
-    img.onload = function() {
-      // Redimensionar si es muy grande (opcional)
-      const MAX_SIZE = 2000;
-      let canvas = document.createElement('canvas');
-      let ctx = canvas.getContext('2d');
-      
-      if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
-        const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
-        canvas.width = img.width * ratio;
-        canvas.height = img.height * ratio;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      } else {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-      }
-      
-      const today = new Date().toLocaleDateString('es-ES');
-      images.unshift({
-        src: canvas.toDataURL('image/jpeg', 0.8), // Comprime la imagen
-        date: today
-      });
-      
-      localStorage.setItem('galleryImages', JSON.stringify(images));
-      loadImages();
-      goToSlide(0);
-    };
-  };
-  reader.readAsDataURL(file);
-}
-    // Cargar eventos desde localStorage
+  // Mostrar loader
+  const carouselInner = document.getElementById('carousel-inner');
+  carouselInner.innerHTML = `
+    <div class="empty-gallery">
+      <i class="fas fa-spinner fa-spin text-4xl mb-2"></i>
+      <p>Procesando imágenes...</p>
+    </div>
+  `;
+
+  // Procesar imágenes en paralelo
+  const processPromises = Array.from(files).map(file => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.src = e.target.result;
+        
+        img.onload = function() {
+          const MAX_SIZE = 1600;
+          let canvas = document.createElement('canvas');
+          let ctx = canvas.getContext('2d');
+          
+          // Redimensionar manteniendo proporciones
+          if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+            const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+            canvas.width = img.width * ratio;
+            canvas.height = img.height * ratio;
+          } else {
+            canvas.width = img.width;
+            canvas.height = img.height;
+          }
+          
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          resolve({
+            src: canvas.toDataURL('image/jpeg', 0.85),
+            date: new Date().toLocaleDateString('es-ES')
+          });
+        };
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // Cuando todas las imágenes estén procesadas
+  Promise.all(processPromises).then(processedImages => {
+    images.unshift(...processedImages);
+    localStorage.setItem('galleryImages', JSON.stringify(images));
+    loadImages();
+    goToSlide(0);
+  });
+} 
+   // Cargar eventos desde localStorage
     function loadEvents() {
       const timelineContainer = document.getElementById('timeline');
       const savedEvents = localStorage.getItem('timelineEvents');
@@ -666,45 +707,52 @@ function handleImageUpload(event) {
 
     // Función para subir imágenes
     function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = new Image();
-    img.src = e.target.result;
+  // Procesar cada imagen seleccionada
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
     
-    img.onload = function() {
-      // Redimensionar si es muy grande (opcional)
-      const MAX_SIZE = 2000;
-      let canvas = document.createElement('canvas');
-      let ctx = canvas.getContext('2d');
+    reader.onload = function(e) {
+      const img = new Image();
+      img.src = e.target.result;
       
-      if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
-        const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
-        canvas.width = img.width * ratio;
-        canvas.height = img.height * ratio;
+      img.onload = function() {
+        // Redimensionar si es muy grande (máximo 2000px)
+        const MAX_SIZE = 2000;
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+          const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+        } else {
+          canvas.width = img.width;
+          canvas.height = img.height;
+        }
+        
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      } else {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-      }
-      
-      const today = new Date().toLocaleDateString('es-ES');
-      images.unshift({
-        src: canvas.toDataURL('image/jpeg', 0.8), // Comprime la imagen
-        date: today
-      });
-      
-      localStorage.setItem('galleryImages', JSON.stringify(images));
-      loadImages();
-      goToSlide(0);
+        
+        const today = new Date().toLocaleDateString('es-ES');
+        images.unshift({
+          src: canvas.toDataURL('image/jpeg', 0.8), // 80% de calidad
+          date: today
+        });
+        
+        // Guardar solo después de procesar todas
+        if (Array.from(files).indexOf(file) === files.length - 1) {
+          localStorage.setItem('galleryImages', JSON.stringify(images));
+          loadImages();
+          goToSlide(0);
+        }
+      };
     };
-  };
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
+  });
 }
-    // Añadir evento automático al subir imagen
+  // Añadir evento automático al subir imagen
     function addAutoEvent(date) {
       events.unshift({
         date: date,
