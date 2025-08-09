@@ -13,16 +13,17 @@
       box-sizing: border-box;
     }
     
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(120deg, #ffdde1, #ee9ca7);
-      overflow-x: hidden;
-      min-height: 100vh;
-      width: 100%;
-      position: relative;
-    }
+   body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(120deg, #ffdde1, #ee9ca7);
+  overflow-x: hidden;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
 
     /* Contenedor principal */
     .main-container {
@@ -30,7 +31,6 @@
       width: 100%;
       margin: 0 auto;
       padding: 0 15px;
-      overflow: hidden;
     }
 
     /* Fondo glass */
@@ -45,21 +45,36 @@
     }
 
     /* Corazones flotantes */
-    .heart {
-      position: absolute;
-      color: rgba(255, 0, 100, 0.8);
-      font-size: 24px;
-      animation: fall linear forwards;
-      opacity: 0.8;
-      z-index: 0;
-      top: -30px;
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(calc(100vh + 30px)) rotate(360deg);
-        opacity: 0;
-      }
-    }
+    .hearts-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none; /* Permite interactuar con elementos debajo */
+  overflow: hidden;
+  z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  color: rgba(255, 0, 100, 0.8);
+  font-size: 24px;
+  animation: fall linear forwards;
+  opacity: 0.8;
+  z-index: 0;
+  top: -30px;
+  left: 0;
+  transform: translateX(0);
+  will-change: transform; /* Optimización de rendimiento */
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(calc(100vh + 30px)) rotate(360deg);
+    opacity: 0;
+  }
+}
 
     /* Carrusel */
     .carousel {
@@ -74,6 +89,13 @@
       justify-content: center;
       margin: 0 auto;
     }
+    .hearts-container {
+  will-change: contents; /* Optimiza animaciones */
+}
+
+.heart {
+  will-change: transform, opacity; /* Optimiza propiedades que cambian */
+}
     .carousel-inner {
       display: flex;
       transition: transform 0.5s ease;
@@ -366,6 +388,7 @@
 </head>
 <body class="text-white">
   <!-- Modal para editar eventos -->
+  <div class="hearts-container" id="hearts-container"></div>
   <div class="modal" id="editModal">
     <div class="modal-content relative">
       <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -780,17 +803,20 @@
 
     // Corazones flotantes
     function initHearts() {
-      function createHeart() {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.style.left = Math.random() * window.innerWidth + 'px';
-        heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        heart.textContent = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 5000);
-      }
-      setInterval(createHeart, 200);
+    const heartsContainer = document.getElementById('hearts-container');
+    
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      heart.textContent = ['❤️', '💖', '💘', '💝', '💗', '💓', '💞'][Math.floor(Math.random() * 7)];
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
     }
+    
+    setInterval(createHeart, 200);
+  }
 
     // Frases aleatorias
     function initQuotes() {
