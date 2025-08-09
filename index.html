@@ -210,12 +210,18 @@
     }
 
     /* Admin buttons */
-    .admin-panel {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 50;
-    }
+   .admin-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 50%;
+  transform: translateX(50%);
+  z-index: 50;
+}
+.admin-panel-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
     .admin-btn {
       background: #ff5e8a;
       color: white;
@@ -233,16 +239,19 @@
     .admin-btn:hover {
       transform: scale(1.1);
     }
-    #admin-options {
-      position: absolute;
-      bottom: 60px;
-      right: 0;
-      background: white;
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      display: none;
-    }
+   #admin-options {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: none;
+  max-width: 200px;
+  width: max-content;
+}
 
     /* Responsividad */
     @media (max-width: 768px) {
@@ -316,15 +325,18 @@
 
   <!-- Botón de administración -->
   <div class="admin-panel">
-    <button class="admin-btn" onclick="toggleAdminPanel()">
-      <i class="fas fa-cog"></i>
-    </button>
-    <div id="admin-options">
-      <button onclick="openImageManager()" class="flex items-center px-3 py-1 bg-pink-100 hover:bg-pink-200 rounded text-pink-800 w-full">
-        <i class="fas fa-images mr-2"></i> Gestionar Fotos
+    <div class="admin-panel-inner">
+      <button class="admin-btn" onclick="toggleAdminPanel()">
+        <i class="fas fa-cog"></i>
       </button>
+      <div id="admin-options">
+        <button onclick="openImageManager()" class="flex items-center px-3 py-1 bg-pink-100 hover:bg-pink-200 rounded text-pink-800 w-full">
+          <i class="fas fa-images mr-2"></i> Gestionar Fotos
+        </button>
+      </div>
     </div>
   </div>
+
 
   <div class="main-container">
     <!-- Portada -->
