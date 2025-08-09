@@ -541,47 +541,38 @@
 
     // Cargar imágenes desde localStorage
     function loadImages() {
-      const carouselInner = document.getElementById('carousel-inner');
-      const savedImages = localStorage.getItem('galleryImages');
-      
-      if (savedImages) {
-        images = JSON.parse(savedImages);
-      } else {
-        images = [];
-        localStorage.setItem('galleryImages', JSON.stringify(images));
-      }
-      
-      // Limpiar contenedor
-      carouselInner.innerHTML = '';
-      
-      if (images.length > 0) {
-        // Crear slides si hay imágenes
-        images.forEach((image, index) => {
-          const slide = document.createElement('div');
-          slide.className = "carousel-item";
-          slide.innerHTML = `
-            <img src="${image.src}" alt="Foto ${index + 1}" class="w-full">
-            <p class="p-2 text-center text-sm mt-2">📅 Subida el ${image.date}</p>
-          `;
-          carouselInner.appendChild(slide);
-        });
-        
-        // Actualizar variables
-        slides = document.querySelectorAll('.carousel-item');
-      } else {
-        // Mostrar mensaje de galería vacía
-        carouselInner.innerHTML = `
-          <div class="empty-gallery">
-            <i class="fas fa-camera text-4xl mb-2"></i>
-            <p>No hay imágenes aún</p>
-            <p class="text-sm mt-2">Sube tu primera foto usando el botón de abajo</p>
-          </div>
-        `;
-      }
-      
-      updateCarousel();
-    }
-
+  const carouselInner = document.getElementById('carousel-inner');
+  const savedImages = localStorage.getItem('galleryImages');
+  
+  images = savedImages ? JSON.parse(savedImages) : [];
+  localStorage.setItem('galleryImages', JSON.stringify(images));
+  
+  carouselInner.innerHTML = '';
+  
+  if (images.length > 0) {
+    images.forEach((image, index) => {
+      const slide = document.createElement('div');
+      slide.className = "carousel-item";
+      slide.innerHTML = `
+        <img src="${image.src}" alt="Foto ${index + 1}" class="w-full h-full object-contain">
+        <p class="p-2 text-center text-sm mt-2">📅 ${image.date}</p>
+      `;
+      carouselInner.appendChild(slide);
+    });
+    
+    slides = document.querySelectorAll('.carousel-item');
+    currentSlide = 0;
+    updateCarousel(); // Asegúrate de que esta línea esté presente
+  } else {
+    carouselInner.innerHTML = `
+      <div class="empty-gallery">
+        <i class="fas fa-camera text-4xl mb-2"></i>
+        <p>No hay imágenes aún</p>
+        <p class="text-sm mt-2">Sube tu primera foto</p>
+      </div>
+    `;
+  }
+}
     // Cargar eventos desde localStorage
     function loadEvents() {
       const timelineContainer = document.getElementById('timeline');
@@ -769,11 +760,11 @@
 
     // Funciones del carrusel
     function updateCarousel() {
-      const carouselInner = document.getElementById('carousel-inner');
-      if (slides.length > 0) {
-        carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
-      }
-    }
+  const carouselInner = document.getElementById('carousel-inner');
+  if (slides.length > 0) {
+    carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+  }
+}
 
     function nextSlide() {
       if (slides.length > 0) {
