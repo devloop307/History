@@ -89,13 +89,13 @@
       justify-content: center;
       margin: 0 auto;
     }
-    .hearts-container {
-  will-change: contents; /* Optimiza animaciones */
-}
+      .hearts-container {
+    will-change: contents; /* Optimiza animaciones */
+  }
 
-.heart {
-  will-change: transform, opacity; /* Optimiza propiedades que cambian */
-}
+  .heart {
+    will-change: transform, opacity; /* Optimiza propiedades que cambian */
+  }
     .carousel-inner {
       display: flex;
       transition: transform 0.5s ease;
@@ -449,7 +449,7 @@
     </section>
 
     <!-- Galería -->
-    <section id="gallery-section" class="py-10 glass p-6 shadow-lg z-10">
+    <section id="gallery-section" class="relative h-screen py-10 glass p-6 shadow-lg z-10">
       <div class="max-w-5xl mx-auto">
         <h2 class="text-3xl font-bold text-center text-white mb-6">Nuestra Galería</h2>
         
@@ -478,7 +478,7 @@
     </section>
 
     <!-- Línea de tiempo -->
-    <section class="py-10 glass p-6 shadow-lg z-10">
+    <section class="py-10 glass p-6 shadow-lg z-10 relative h-screen">
       <div class="max-w-3xl mx-auto">
         <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
         <div id="timeline" class="space-y-4">
