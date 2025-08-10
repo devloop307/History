@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Mismos estilos de corazones animados */
+    body{
+      background: linear-gradient(120deg, #ffdde1, #ee9ca7)!important
+    }
     .hearts-container {
       position: fixed;
       top: 0;
@@ -20,7 +23,7 @@
     }
     .heart {
       position: absolute;
-      color: #ffdde1;
+      color: rgba(255, 0, 100, 0.8);
       animation: fall linear forwards;
       opacity: 0.8;
       z-index: 0;
@@ -35,12 +38,12 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-pink-200 to-pink-400 min-h-screen flex items-center justify-center">
+<body class="bg-gradient-to-br min-h-screen flex items-center justify-center">
   <div class="hearts-container" id="hearts-container"></div>
   
   <div class="bg-white/30 backdrop-blur-md p-8 rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
-    <h1 class="text-3xl font-bold text-center text-pink-800 mb-2">Nuestro Lugar Secreto</h1>
-    <p class="text-center text-pink-700 mb-6">Ingresa la fecha de nuestro día especial (DD/MM/AAAA)</p>
+    <h1 class="text-3xl font-bold text-center text-pink-800 mb-2">Nuestro Lugar</h1>
+    <p class="text-center text-pink-700 mb-6">Ingresa la fecha (DD/MM/AAAA)</p>
     
     <div class="space-y-4">
       <input type="text" id="fechaAcceso" placeholder="Ej: 14/02/2023" 
