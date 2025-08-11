@@ -670,6 +670,7 @@ function handleImageUpload(event) {
   
   if (savedEvents) {
     events = JSON.parse(savedEvents); // Mantiene el orden original
+    events = events.reverse();
   } else {
     events = [];
     localStorage.setItem('timelineEvents', JSON.stringify(events));
