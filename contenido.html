@@ -75,8 +75,6 @@
     opacity: 0;
   }
 }
-
-    /* Carrusel mejorado */
     /* Carrusel mejorado */
 .carousel {
   position: relative;
@@ -497,51 +495,64 @@
 </section>
 
 
-    <!-- Línea de tiempo -->
-    <section class="py-10 glass p-6 shadow-lg z-10">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
-        <div id="timeline" class="space-y-4">
-          <div class="empty-timeline">
-            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
-            <p>No hay eventos aún</p>
-            <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
-          </div>
-        </div>
-        
-        <!-- Formulario para añadir nuevos eventos -->
-        <div class="mt-8 glass p-4 rounded-xl">
-  <h3 class="text-xl font-semibold mb-3">Añadir nuevo evento</h3>
-  <div class="space-y-3">
-    <input type="text" id="event-date" placeholder="Fecha (ej: 15/03/2025)" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
-    <input type="text" id="event-title" placeholder="Título del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
-    <textarea id="event-description" placeholder="Descripción del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black" rows="3"></textarea>
+<!-- Línea de tiempo -->
+<section class="relative py-10 glass p-6 shadow-lg z-10">
+  <!-- Fondo de corazones -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div id="hearts-background-timeline"></div>
+  </div>
+
+  <div class="max-w-3xl mx-auto relative z-10">
+    <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
+    <div id="timeline" class="space-y-4">
+      <div class="empty-timeline">
+        <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+        <p>No hay eventos aún</p>
+        <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
+      </div>
+    </div>
     
-    <!-- Botón centrado -->
-    <div class="flex justify-center">
-      <button onclick="addNewEvent()" class="px-4 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition">
-        Añadir Evento <i class="fas fa-plus ml-1"></i>
-      </button>
+    <!-- Formulario para añadir nuevos eventos -->
+    <div class="mt-8 glass p-4 rounded-xl">
+      <h3 class="text-xl font-semibold mb-3">Añadir nuevo evento</h3>
+      <div class="space-y-3">
+        <input type="text" id="event-date" placeholder="Fecha (ej: 15/03/2025)" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
+        <input type="text" id="event-title" placeholder="Título del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
+        <textarea id="event-description" placeholder="Descripción del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black" rows="3"></textarea>
+        
+        <!-- Botón centrado -->
+        <div class="flex justify-center">
+          <button onclick="addNewEvent()" class="px-4 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition">
+            Añadir Evento <i class="fas fa-plus ml-1"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-
-    <!-- Frases románticas -->
-    <section class="py-10 glass p-6 shadow-lg z-10 text-center">
-      <h2 class="text-3xl font-bold mb-4">Frases para ti 💌</h2>
-      <p id="frase" class="text-lg italic">Eres mi lugar favorito para volver ❤️</p>
-      <button onclick="changeQuote()" class="mt-4 px-4 py-1 bg-pink-600/50 rounded-full text-sm hover:bg-pink-700 transition">
-        Otra frase <i class="fas fa-sync-alt ml-1"></i>
-      </button>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-4 glass p-6 text-center shadow-lg z-10">
-      <p class="text-sm">Hecho con mucho ❤️ para ti</p>
-      <p class="text-xs mt-1 opacity-70">© 2025 Nuestra Historia - Todos los derechos reservados</p>
-    </footer>
+<!-- Frases románticas -->
+<section class="relative py-10 glass p-6 shadow-lg z-10 text-center">
+  <!-- Fondo de corazones -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div id="hearts-background-quotes"></div>
   </div>
+
+  <div class="relative z-10">
+    <h2 class="text-3xl font-bold mb-4">Frases para ti 💌</h2>
+    <p id="frase" class="text-lg italic">Eres mi lugar favorito para volver ❤️</p>
+    <button onclick="changeQuote()" class="mt-4 px-4 py-1 bg-pink-600/50 rounded-full text-sm hover:bg-pink-700 transition">
+      Otra frase <i class="fas fa-sync-alt ml-1"></i>
+    </button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-4 glass p-6 text-center shadow-lg z-10">
+  <p class="text-sm">Hecho con mucho ❤️ para ti</p>
+  <p class="text-xs mt-1 opacity-70">© 2025 Nuestra Historia - Todos los derechos reservados</p>
+</footer>
+
 
   <script>
     // Variables globales
