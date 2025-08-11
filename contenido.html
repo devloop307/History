@@ -160,37 +160,37 @@
 }
 
     /* Línea de tiempo */
-    .timeline-item {
+/* Línea de tiempo mejorada */
+.timeline-item {
   position: relative;
-  padding-left: 2rem;
-  margin-bottom: 1rem; /* Reducir el espacio entre items */
+  padding-left: 2.5rem; /* Más espacio para el punto */
+  margin-bottom: 1.5rem;
 }
 
 .timeline-item:before {
   content: '';
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 7px; /* Centrado con el punto */
+  top: 24px; /* Empieza después del primer punto */
   width: 2px;
-  height: calc(100% - 16px); /* Restar el tamaño del punto */
+  height: calc(100% - 24px); /* Ajuste preciso */
   background: rgba(255, 255, 255, 0.5);
-  margin-top: 16px; /* Bajar la línea para que empiece después del punto */
 }
 
 .timeline-item:last-child:before {
-  height: 0; /* Eliminar completamente en el último */
+  display: none; /* Elimina la línea del último elemento */
 }
 
 .timeline-dot {
   position: absolute;
-  left: -8px;
+  left: 0;
   top: 0;
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background: #ff5e8a;
   border: 2px solid white;
-  z-index: 2; /* Asegurar que esté sobre la línea */
+  z-index: 2;
 }
     .timeline-content {
       background: rgba(255, 255, 255, 0.15);
@@ -521,7 +521,10 @@
     <div class="mt-8 glass p-4 rounded-xl">
       <h3 class="text-xl font-semibold mb-3">Añadir nuevo evento</h3>
       <div class="space-y-3">
-        <input type="text" id="event-date" placeholder="Fecha (ej: 15/03/2025)" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
+        <input type="text" id="event-date" placeholder="Fecha (ej: 15/03/2025)" 
+       pattern="\d{2}/\d{2}/\d{4}" 
+       title="Por favor usa el formato dd/mm/yyyy"
+       class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
         <input type="text" id="event-title" placeholder="Título del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
         <textarea id="event-description" placeholder="Descripción del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black" rows="3"></textarea>
         
@@ -664,83 +667,107 @@ function handleImageUpload(event) {
   });
 }
 // Cargar eventos desde localStorage
-  function loadEvents() {
+function loadEvents() {
   const timelineContainer = document.getElementById('timeline');
   const savedEvents = localStorage.getItem('timelineEvents');
   
   if (savedEvents) {
-    events = JSON.parse(savedEvents); // Mantiene el orden original
-    events = events.reverse();
+    events = JSON.parse(savedEvents);
+    
+    // Ordenar eventos por fecha (más reciente primero)
+    events.sort((a, b) => {
+      // Convertir fechas "dd/mm/yyyy" a "yyyy/mm/dd" para comparación
+      const dateA = a.date.split('/').reverse().join('/');
+      const dateB = b.date.split('/').reverse().join('/');
+      return new Date(dateB) - new Date(dateA);
+    });
   } else {
     events = [];
     localStorage.setItem('timelineEvents', JSON.stringify(events));
   }
-      
-      timelineContainer.innerHTML = '';
-      
-      if (events.length > 0) {
-        events.forEach((event, index) => {
-          const eventElement = document.createElement('div');
-          eventElement.className = "timeline-item";
-          eventElement.innerHTML = `
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="edit-buttons">
-                <button class="edit-btn" onclick="editEvent(${index})"><i class="fas fa-edit text-xs"></i></button>
-                <button class="edit-btn" onclick="deleteEvent(${index})"><i class="fas fa-trash text-xs"></i></button>
-              </div>
-              <p class="font-bold text-white text-lg">${event.date} - ${event.title}</p>
-              <p class="mt-1">${event.description}</p>
-            </div>
-          `;
-          timelineContainer.appendChild(eventElement);
-        });
-      } else {
-        // Mostrar mensaje de línea de tiempo vacía
-        timelineContainer.innerHTML = `
-          <div class="empty-timeline">
-            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
-            <p>No hay eventos aún</p>
-            <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
+  
+  timelineContainer.innerHTML = '';
+  
+  if (events.length > 0) {
+    events.forEach((event, index) => {
+      const eventElement = document.createElement('div');
+      eventElement.className = "timeline-item";
+      eventElement.innerHTML = `
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="edit-buttons">
+            <button class="edit-btn" onclick="editEvent(${index})"><i class="fas fa-edit text-xs"></i></button>
+            <button class="edit-btn" onclick="deleteEvent(${index})"><i class="fas fa-trash text-xs"></i></button>
           </div>
-        `;
-      }
-    }
-
+          <p class="font-bold text-white text-lg">${event.date} - ${event.title}</p>
+          <p class="mt-1">${event.description}</p>
+        </div>
+      `;
+      timelineContainer.appendChild(eventElement);
+    });
+  } else {
+    timelineContainer.innerHTML = `
+      <div class="empty-timeline">
+        <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+        <p>No hay eventos aún</p>
+        <p class="text-sm mt-2">Añade tu primer evento usando el formulario de abajo</p>
+      </div>
+    `;
+  }
+}
     // Función para subir imágenes
     // 
     // Añadir evento automático al subir imagen
-    function addAutoEvent(date) {
-      events.unshift({
-        date: date,
-        title: "Momento especial",
-        description: "Guardamos un nuevo recuerdo juntos en nuestra galería 💕"
-      });
-      
-      localStorage.setItem('timelineEvents', JSON.stringify(events));
-      loadEvents();
-    }
-
+function addAutoEvent(date) {
+  events.push({
+    date: date,
+    title: "Momento especial",
+    description: "Guardamos un nuevo recuerdo juntos en nuestra galería 💕"
+  });
+  
+  // Ordenar y guardar
+  events.sort((a, b) => {
+    const dateA = a.date.split('/').reverse().join('/');
+    const dateB = b.date.split('/').reverse().join('/');
+    return new Date(dateB) - new Date(dateA);
+  });
+  
+  localStorage.setItem('timelineEvents', JSON.stringify(events));
+  loadEvents();
+}
     // Añadir nuevo evento manual
-    function addNewEvent() {
-      const date = document.getElementById('event-date').value;
-      const title = document.getElementById('event-title').value;
-      const description = document.getElementById('event-description').value;
-      
-      if (date && title && description) {
-        events.unshift({ date, title, description });
-        localStorage.setItem('timelineEvents', JSON.stringify(events));
-        loadEvents();
-        
-        // Limpiar campos
-        document.getElementById('event-date').value = '';
-        document.getElementById('event-title').value = '';
-        document.getElementById('event-description').value = '';
-      } else {
-        alert('Por favor completa todos los campos');
-      }
+function addNewEvent() {
+  const date = document.getElementById('event-date').value;
+  const title = document.getElementById('event-title').value;
+  const description = document.getElementById('event-description').value;
+  
+  if (date && title && description) {
+    // Validar formato de fecha (dd/mm/yyyy)
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(date)) {
+      alert('Por favor ingresa la fecha en formato dd/mm/yyyy (ej: 15/03/2025)');
+      return;
     }
-
+    
+    events.push({ date, title, description });
+    
+    // Ordenar y guardar
+    events.sort((a, b) => {
+      const dateA = a.date.split('/').reverse().join('/');
+      const dateB = b.date.split('/').reverse().join('/');
+      return new Date(dateB) - new Date(dateA);
+    });
+    
+    localStorage.setItem('timelineEvents', JSON.stringify(events));
+    loadEvents();
+    
+    // Limpiar campos
+    document.getElementById('event-date').value = '';
+    document.getElementById('event-title').value = '';
+    document.getElementById('event-description').value = '';
+  } else {
+    alert('Por favor completa todos los campos');
+  }
+}
     // Editar evento
     function editEvent(index) {
       currentEditingEvent = index;
