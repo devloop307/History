@@ -583,11 +583,30 @@
 
     // Cargar imágenes desde localStorage
     // Función mejorada para cargar imágenes
+// Función para cargar imágenes con precarga local
 function loadImages() {
   const carouselInner = document.getElementById('carousel-inner');
   const savedImages = localStorage.getItem('galleryImages');
   
-  images = savedImages ? JSON.parse(savedImages) : [];
+  // Si no hay imágenes guardadas, cargar las 10 imágenes locales
+  if (!savedImages) {
+    images = [
+  { src: "img/foto1.jpeg", date: "12/10/2024" },
+  { src: "img/foto2.jpeg", date: "20/04/2023" },
+  // ... más imágenes
+];
+    // Precargar 10 imágenes desde la carpeta img
+    for (let i = 1; i <= 10; i++) {
+      images.push({
+        src: `img/foto${i}.jpg`,  // Asegúrate de que los nombres coincidan
+        date: new Date().toLocaleDateString('es-ES') // Fecha actual
+      });
+    }
+    localStorage.setItem('galleryImages', JSON.stringify(images));
+  } else {
+    images = JSON.parse(savedImages);
+  }
+  
   carouselInner.innerHTML = '';
   
   if (images.length > 0) {
@@ -613,7 +632,6 @@ function loadImages() {
     `;
   }
 }
-
 // Función para manejar la subida de imágenes - MODIFICADA
 function handleImageUpload(event) {
   const files = event.target.files;
