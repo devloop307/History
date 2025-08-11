@@ -615,46 +615,55 @@ function loadImages() {
 }
 
 // Función para manejar la subida de imágenes
+// Función para manejar la subida de imágenes - MODIFICADA
 function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = new Image();
-    img.src = e.target.result;
+  // Procesar cada imagen seleccionada
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
     
-    img.onload = function() {
-      // Redimensionar si es muy grande (opcional)
-      const MAX_SIZE = 2000;
-      let canvas = document.createElement('canvas');
-      let ctx = canvas.getContext('2d');
+    reader.onload = function(e) {
+      const img = new Image();
+      img.src = e.target.result;
       
-      if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
-        const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
-        canvas.width = img.width * ratio;
-        canvas.height = img.height * ratio;
+      img.onload = function() {
+        // Redimensionar si es muy grande (máximo 2000px)
+        const MAX_SIZE = 2000;
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+          const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+        } else {
+          canvas.width = img.width;
+          canvas.height = img.height;
+        }
+        
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      } else {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-      }
-      
-      const today = new Date().toLocaleDateString('es-ES');
-      images.unshift({
-        src: canvas.toDataURL('image/jpeg', 0.8), // Comprime la imagen
-        date: today
-      });
-      
-      localStorage.setItem('galleryImages', JSON.stringify(images));
-      loadImages();
-      goToSlide(0);
+        
+        const today = new Date().toLocaleDateString('es-ES');
+        // Cambiado de unshift() a push() para mantener el orden
+        images.push({
+          src: canvas.toDataURL('image/jpeg', 0.8),
+          date: today
+        });
+        
+        // Guardar solo después de procesar todas
+        if (Array.from(files).indexOf(file) === files.length - 1) {
+          localStorage.setItem('galleryImages', JSON.stringify(images));
+          loadImages();
+          goToSlide(0); // Asegurar que el carrusel empiece desde la primera imagen
+        }
+      };
     };
-  };
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
+  });
 }
-    // Cargar eventos desde localStorage
+// Cargar eventos desde localStorage
     function loadEvents() {
       const timelineContainer = document.getElementById('timeline');
       const savedEvents = localStorage.getItem('timelineEvents');
@@ -814,32 +823,31 @@ function handleImageUpload(event) {
     }
 
     // Administrar imágenes - Versión mejorada con números
-    function openImageManager() {
-      const container = document.getElementById('image-manager-container');
-      container.innerHTML = '';
-      
-      if (images.length > 0) {
-        images.forEach((image, index) => {
-          const imgContainer = document.createElement('div');
-          imgContainer.className = "image-container";
-          imgContainer.innerHTML = `
-            <div class="image-number">${index + 1}</div>
-            <img src="${image.src}" alt="Imagen ${index + 1}">
-            <div class="image-actions">
-              <button onclick="deleteImage(${index})" class="delete-btn">
-                <i class="fas fa-trash"></i> Eliminar
-              </button>
-            </div>
-          `;
-          container.appendChild(imgContainer);
-        });
-      } else {
-        container.innerHTML = '<p class="text-center text-gray-800 col-span-3 py-10">No hay imágenes para mostrar</p>';
-      }
-      
-      document.getElementById('imageManagerModal').style.display = 'flex';
-    }
-
+function openImageManager() {
+  const container = document.getElementById('image-manager-container');
+  container.innerHTML = '';
+  
+  if (images.length > 0) {
+    images.forEach((image, index) => {
+      const imgContainer = document.createElement('div');
+      imgContainer.className = "image-container";
+      imgContainer.innerHTML = `
+        <div class="image-number">${index + 1}</div> <!-- Mostrar posición correcta -->
+        <img src="${image.src}" alt="Imagen ${index + 1}">
+        <div class="image-actions">
+          <button onclick="deleteImage(${index})" class="delete-btn">
+            <i class="fas fa-trash"></i> Eliminar
+          </button>
+        </div>
+      `;
+      container.appendChild(imgContainer);
+    });
+  } else {
+    container.innerHTML = '<p class="text-center text-gray-800 col-span-3 py-10">No hay imágenes para mostrar</p>';
+  }
+  
+  document.getElementById('imageManagerModal').style.display = 'flex';
+}
     function deleteImage(index) {
       if (confirm(`¿Estás seguro de que quieres eliminar la imagen ${index + 1}?`)) {
         images.splice(index, 1);
