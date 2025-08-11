@@ -547,7 +547,23 @@
   </div>
 </section>
 
-
+<!-- Nueva sección: Sincronización entre dispositivos -->
+<section class="py-10 glass p-6 shadow-lg z-10">
+  <div class="max-w-3xl mx-auto text-center">
+    <h2 class="text-3xl font-bold mb-6">Sincronizar entre Dispositivos</h2>
+    <div class="action-buttons justify-center">
+      <button onclick="exportarDatos()" class="action-btn">
+        <i class="fas fa-file-export"></i> Exportar Datos
+      </button>
+      <button onclick="importarDatos()" class="action-btn">
+        <i class="fas fa-file-import"></i> Importar Datos
+      </button>
+    </div>
+    <p class="mt-4 text-sm text-white/80">
+      Exporta tus fotos y eventos para cargarlos en otro dispositivo
+    </p>
+  </div>
+</section>
 
   <script>
     // Variables globales
@@ -928,6 +944,73 @@ function handleImageUpload(event) {
     window.deleteEvent = deleteEvent;
     window.deleteImage = deleteImage;
     window.openImageManager = openImageManager;
+
+    // ===== EXPORTAR/IMPORTAR DATOS ===== //
+function exportarDatos() {
+  const datos = {
+    galleryImages: localStorage.getItem('galleryImages'),
+    timelineEvents: localStorage.getItem('timelineEvents')
+  };
+  
+  // Crear archivo JSON descargable
+  const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'respaldo_nuestra_historia.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+  
+  alert('✅ Datos exportados! Guarda este archivo .json y compártelo con tu pareja.');
+}
+
+function importarDatos() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const datos = JSON.parse(event.target.result);
+        
+        if (!datos.galleryImages && !datos.timelineEvents) {
+          throw new Error("Archivo no válido");
+        }
+        
+        if (confirm(`¿Importar ${datos.galleryImages ? 'fotos' : ''} ${datos.timelineEvents ? 'y eventos' : ''}? Los datos actuales se conservarán.`)) {
+          if (datos.galleryImages) {
+            localStorage.setItem('galleryImages', datos.galleryImages);
+          }
+          if (datos.timelineEvents) {
+            localStorage.setItem('timelineEvents', datos.timelineEvents);
+          }
+          
+          alert('Datos importados con éxito! Recargando...');
+          setTimeout(() => location.reload(), 1000);
+        }
+      } catch (error) {
+        alert('❌ Error: El archivo no es válido o está corrupto.');
+      }
+    };
+    reader.readAsText(file);
+  };
+  
+  input.click();
+}
+
+// Hacer funciones accesibles globalmente
+window.exportarDatos = exportarDatos;
+window.importarDatos = importarDatos;
+
   </script>
 </body>
 </html>
