@@ -163,42 +163,45 @@
 /* Línea de tiempo mejorada */
 .timeline-item {
   position: relative;
-  padding-left: 2.5rem; /* Más espacio para el punto */
+  padding-left: 2rem;
   margin-bottom: 1.5rem;
 }
 
 .timeline-item:before {
   content: '';
   position: absolute;
-  left: 7px; /* Centrado con el punto */
-  top: 24px; /* Empieza después del primer punto */
+  left: 0.7rem; /* Alineado con el centro del punto */
+  top: 1.5rem; /* Empieza desde la mitad del primer punto */
   width: 2px;
-  height: calc(100% - 24px); /* Ajuste preciso */
+  height: calc(100% + 1.5rem); /* Conecta completamente con el siguiente */
   background: rgba(255, 255, 255, 0.5);
 }
 
 .timeline-item:last-child:before {
-  display: none; /* Elimina la línea del último elemento */
+  height: calc(100% - 1.5rem); /* Ajuste para el último elemento */
 }
 
 .timeline-dot {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0.5rem; /* Posición centrada verticalmente */
+  top: 0.5rem;
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background: #ff5e8a;
   border: 2px solid white;
   z-index: 2;
+  transform: translateY(50%); /* Centrado vertical exacto */
 }
-    .timeline-content {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 1rem;
-      border-radius: 0.5rem;
-      transition: all 0.3s ease;
-      position: relative;
-    }
+
+.timeline-content {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-left: 1.5rem; /* Espacio desde la línea */
+}
     .timeline-content:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateX(5px);
@@ -674,12 +677,12 @@ function loadEvents() {
   if (savedEvents) {
     events = JSON.parse(savedEvents);
     
-    // Ordenar eventos por fecha (más reciente primero)
+    // Ordenar eventos por fecha (más antiguo primero)
     events.sort((a, b) => {
       // Convertir fechas "dd/mm/yyyy" a "yyyy/mm/dd" para comparación
       const dateA = a.date.split('/').reverse().join('/');
       const dateB = b.date.split('/').reverse().join('/');
-      return new Date(dateB) - new Date(dateA);
+      return new Date(dateA) - new Date(dateB); // Cambio aquí (invertimos el orden)
     });
   } else {
     events = [];
@@ -715,8 +718,6 @@ function loadEvents() {
     `;
   }
 }
-    // Función para subir imágenes
-    // 
     // Añadir evento automático al subir imagen
 function addAutoEvent(date) {
   events.push({
@@ -725,17 +726,17 @@ function addAutoEvent(date) {
     description: "Guardamos un nuevo recuerdo juntos en nuestra galería 💕"
   });
   
-  // Ordenar y guardar
+  // Ordenar y guardar (más antiguo primero)
   events.sort((a, b) => {
     const dateA = a.date.split('/').reverse().join('/');
     const dateB = b.date.split('/').reverse().join('/');
-    return new Date(dateB) - new Date(dateA);
+    return new Date(dateA) - new Date(dateB); // Cambio aquí
   });
   
   localStorage.setItem('timelineEvents', JSON.stringify(events));
   loadEvents();
 }
-    // Añadir nuevo evento manual
+// Añadir nuevo evento manual
 function addNewEvent() {
   const date = document.getElementById('event-date').value;
   const title = document.getElementById('event-title').value;
@@ -750,11 +751,11 @@ function addNewEvent() {
     
     events.push({ date, title, description });
     
-    // Ordenar y guardar
+    // Ordenar y guardar (más antiguo primero)
     events.sort((a, b) => {
       const dateA = a.date.split('/').reverse().join('/');
       const dateB = b.date.split('/').reverse().join('/');
-      return new Date(dateB) - new Date(dateA);
+      return new Date(dateA) - new Date(dateB); // Cambio aquí
     });
     
     localStorage.setItem('timelineEvents', JSON.stringify(events));
@@ -768,7 +769,7 @@ function addNewEvent() {
     alert('Por favor completa todos los campos');
   }
 }
-    // Editar evento
+// Editar evento
     function editEvent(index) {
       currentEditingEvent = index;
       const event = events[index];
