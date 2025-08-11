@@ -563,60 +563,6 @@
 </section>
 
   <script>
-    // Configuración de IndexedDB
-let db;
-const DB_NAME = 'GalleryDB';
-const STORE_NAME = 'images';
-
-const initDB = () => {
-  return new Promise((resolve) => {
-    const request = indexedDB.open(DB_NAME, 1);
-
-    request.onupgradeneeded = (event) => {
-      db = event.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-      }
-    };
-
-    request.onsuccess = (event) => {
-      db = event.target.result;
-      resolve(db);
-    };
-
-    request.onerror = (event) => {
-      console.error('Error al abrir IndexedDB:', event.target.error);
-    };
-  });
-};
-
-// Guardar imágenes en IndexedDB
-const saveImagesToDB = async (images) => {
-  await initDB();
-  const tx = db.transaction(STORE_NAME, 'readwrite');
-  const store = tx.objectStore(STORE_NAME);
-
-  images.forEach(image => {
-    store.add(image);
-  });
-
-  return new Promise((resolve) => {
-    tx.oncomplete = () => resolve();
-  });
-};
-
-// Cargar imágenes desde IndexedDB
-const loadImagesFromDB = async () => {
-  await initDB();
-  const tx = db.transaction(STORE_NAME, 'readonly');
-  const store = tx.objectStore(STORE_NAME);
-  const request = store.getAll();
-
-  request.onsuccess = () => {
-    images = request.result;
-    updateCarousel(); // Actualiza el carrusel
-  };
-};
     // Variables globales
     let currentSlide = 0;
     let slides = [];
@@ -637,12 +583,13 @@ const loadImagesFromDB = async () => {
 
     // Cargar imágenes desde localStorage
     // Función mejorada para cargar imágenes
-async function loadImages() {
+function loadImages() {
   const carouselInner = document.getElementById('carousel-inner');
+  const savedImages = localStorage.getItem('galleryImages');
+  
+  images = savedImages ? JSON.parse(savedImages) : [];
   carouselInner.innerHTML = '';
-
-  await loadImagesFromDB(); // Carga desde IndexedDB
-
+  
   if (images.length > 0) {
     images.forEach((image) => {
       const slide = document.createElement('div');
@@ -653,6 +600,7 @@ async function loadImages() {
       `;
       carouselInner.appendChild(slide);
     });
+    
     slides = document.querySelectorAll('.carousel-item');
     currentSlide = 0;
     updateCarousel();
@@ -665,6 +613,7 @@ async function loadImages() {
     `;
   }
 }
+
 // Función para manejar la subida de imágenes - MODIFICADA
 function handleImageUpload(event) {
   const files = event.target.files;
@@ -672,38 +621,37 @@ function handleImageUpload(event) {
 
   Array.from(files).forEach(file => {
     const reader = new FileReader();
+    
     reader.onload = function(e) {
       const img = new Image();
       img.src = e.target.result;
       
       img.onload = function() {
-        const MAX_WIDTH = 800;  // Ancho máximo
-        const MAX_HEIGHT = 800; // Alto máximo
-        let width = img.width;
-        let height = img.height;
-
-        // Redimensionar manteniendo proporción
-        if (width > MAX_WIDTH || height > MAX_HEIGHT) {
-          const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
-          width = width * ratio;
-          height = height * ratio;
+        const MAX_SIZE = 2000;
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
+          const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+        } else {
+          canvas.width = img.width;
+          canvas.height = img.height;
         }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
+        
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
         const today = new Date().toLocaleDateString('es-ES');
-        images.push({
-          src: canvas.toDataURL('image/jpeg', 0.6), // Calidad 60%
+        images.push({  // <- Aquí está el cambio clave (push en lugar de unshift)
+          src: canvas.toDataURL('image/jpeg', 0.8),
           date: today
         });
-
+        
         if (Array.from(files).indexOf(file) === files.length - 1) {
-          saveImagesToDB(images); // Guardar en IndexedDB (paso siguiente)
-          loadImagesFromDB();     // Recargar el carrusel
+          localStorage.setItem('galleryImages', JSON.stringify(images));
+          loadImages();
+          goToSlide(0);  // <- Reinicia el carrusel
         }
       };
     };
@@ -753,6 +701,8 @@ function handleImageUpload(event) {
       }
     }
 
+    // Función para subir imágenes
+    // 
     // Añadir evento automático al subir imagen
     function addAutoEvent(date) {
       events.unshift({
@@ -848,20 +798,14 @@ function openImageManager() {
   
   document.getElementById('imageManagerModal').style.display = 'flex';
 }
-async function deleteImage(index) {
-  if (confirm(`¿Eliminar esta imagen?`)) {
-    await initDB();
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    const store = tx.objectStore(STORE_NAME);
-    const request = store.getAll();
-
-    request.onsuccess = () => {
-      const allImages = request.result;
-      store.delete(allImages[index].id); // Elimina por ID único
-      loadImagesFromDB(); // Recarga el carrusel
-    };
-  }
-}
+    function deleteImage(index) {
+      if (confirm(`¿Estás seguro de que quieres eliminar la imagen ${index + 1}?`)) {
+        images.splice(index, 1);
+        localStorage.setItem('galleryImages', JSON.stringify(images));
+        loadImages();
+        openImageManager();
+      }
+    }
 
     function closeImageManager() {
       document.getElementById('imageManagerModal').style.display = 'none';
@@ -1021,6 +965,7 @@ function importarDatos() {
 // Hacer funciones accesibles globalmente
 window.exportarDatos = exportarDatos;
 window.importarDatos = importarDatos;
+
   </script>
 </body>
 </html>
