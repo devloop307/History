@@ -160,18 +160,16 @@
 }
 
     /* Línea de tiempo */
-/* Línea de tiempo mejorada */
-.timeline-item {
+    .timeline-item {
   position: relative;
-  padding-left: 2rem;
+  padding-left: 2.5rem; /* espacio para el punto y la línea */
   margin-bottom: 1.5rem;
 }
 
 .timeline-dot {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 0;
+  left: 0; /* alinear a la izquierda */
+  top: 0.4rem; /* bajar para que esté al lado del texto */
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -183,8 +181,7 @@
 .timeline-item:before {
   content: '';
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 7px; /* centrar la línea con el punto */
   top: 0;
   width: 2px;
   height: 100%;
@@ -193,7 +190,7 @@
 }
 
 .timeline-item:last-child:before {
-  height: 16px;
+  height: 8px; /* cortar la línea después del último punto */
 }
 
     .timeline-content {
