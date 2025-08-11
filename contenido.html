@@ -614,13 +614,11 @@ function loadImages() {
   }
 }
 
-// Función para manejar la subida de imágenes
 // Función para manejar la subida de imágenes - MODIFICADA
 function handleImageUpload(event) {
   const files = event.target.files;
   if (!files || files.length === 0) return;
 
-  // Procesar cada imagen seleccionada
   Array.from(files).forEach(file => {
     const reader = new FileReader();
     
@@ -629,7 +627,6 @@ function handleImageUpload(event) {
       img.src = e.target.result;
       
       img.onload = function() {
-        // Redimensionar si es muy grande (máximo 2000px)
         const MAX_SIZE = 2000;
         let canvas = document.createElement('canvas');
         let ctx = canvas.getContext('2d');
@@ -646,17 +643,15 @@ function handleImageUpload(event) {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         
         const today = new Date().toLocaleDateString('es-ES');
-        // Cambiado de unshift() a push() para mantener el orden
-        images.push({
+        images.push({  // <- Aquí está el cambio clave (push en lugar de unshift)
           src: canvas.toDataURL('image/jpeg', 0.8),
           date: today
         });
         
-        // Guardar solo después de procesar todas
         if (Array.from(files).indexOf(file) === files.length - 1) {
           localStorage.setItem('galleryImages', JSON.stringify(images));
           loadImages();
-          goToSlide(0); // Asegurar que el carrusel empiece desde la primera imagen
+          goToSlide(0);  // <- Reinicia el carrusel
         }
       };
     };
@@ -707,53 +702,8 @@ function handleImageUpload(event) {
     }
 
     // Función para subir imágenes
-    function handleImageUpload(event) {
-  const files = event.target.files;
-  if (!files || files.length === 0) return;
-
-  // Procesar cada imagen seleccionada
-  Array.from(files).forEach(file => {
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-      const img = new Image();
-      img.src = e.target.result;
-      
-      img.onload = function() {
-        // Redimensionar si es muy grande (máximo 2000px)
-        const MAX_SIZE = 2000;
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        
-        if (img.width > MAX_SIZE || img.height > MAX_SIZE) {
-          const ratio = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height);
-          canvas.width = img.width * ratio;
-          canvas.height = img.height * ratio;
-        } else {
-          canvas.width = img.width;
-          canvas.height = img.height;
-        }
-        
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        
-        const today = new Date().toLocaleDateString('es-ES');
-        images.unshift({
-          src: canvas.toDataURL('image/jpeg', 0.8), // 80% de calidad
-          date: today
-        });
-        
-        // Guardar solo después de procesar todas
-        if (Array.from(files).indexOf(file) === files.length - 1) {
-          localStorage.setItem('galleryImages', JSON.stringify(images));
-          loadImages();
-          goToSlide(0);
-        }
-      };
-    };
-    reader.readAsDataURL(file);
-  });
-}
-  // Añadir evento automático al subir imagen
+    // 
+    // Añadir evento automático al subir imagen
     function addAutoEvent(date) {
       events.unshift({
         date: date,
