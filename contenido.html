@@ -159,39 +159,38 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-    /* Línea de tiempo */
-/* Línea de tiempo mejorada */
+/* Línea de tiempo mejorada - Versión final */
 .timeline-item {
   position: relative;
-  padding-left: 2rem;
-  margin-bottom: 1.5rem;
+  padding-left: 3rem; /* Más espacio para la línea y punto */
+  margin-bottom: 2rem;
 }
 
 .timeline-item:before {
   content: '';
   position: absolute;
-  left: 0.7rem; /* Alineado con el centro del punto */
-  top: 1.5rem; /* Empieza desde la mitad del primer punto */
+  left: 1.5rem; /* Línea más a la derecha */
+  top: 1.5rem; /* Empieza después del punto */
   width: 2px;
-  height: calc(100% + 1.5rem); /* Conecta completamente con el siguiente */
+  height: calc(100% + 1rem); /* Conecta con el siguiente punto */
   background: rgba(255, 255, 255, 0.5);
 }
 
 .timeline-item:last-child:before {
-  height: calc(100% - 1.5rem); /* Ajuste para el último elemento */
+  height: calc(100% - 1.5rem); /* Ajuste final para último elemento */
 }
 
 .timeline-dot {
   position: absolute;
-  left: 0.5rem; /* Posición centrada verticalmente */
-  top: 0.5rem;
+  left: 1.35rem; /* Alineado con la línea */
+  top: 50%; /* Centrado verticalmente */
+  transform: translateY(-50%); /* Centrado preciso */
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background: #ff5e8a;
   border: 2px solid white;
   z-index: 2;
-  transform: translateY(50%); /* Centrado vertical exacto */
 }
 
 .timeline-content {
@@ -200,8 +199,9 @@
   border-radius: 0.5rem;
   transition: all 0.3s ease;
   position: relative;
-  margin-left: 1.5rem; /* Espacio desde la línea */
+  margin-left: 0.5rem; /* Espacio desde la línea */
 }
+
     .timeline-content:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateX(5px);
