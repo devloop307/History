@@ -164,10 +164,10 @@
 .timeline-item:before {
   content: '';
   position: absolute;
-  left: 1.75rem; /* Línea más a la derecha */
-  top: 0; /* Empieza desde el punto */
+  left: 2.5rem; /* Aumentado de 1.75rem para alinear con el nuevo espacio */
+  top: 0;
   width: 2px;
-  height: 100%; /* Llega hasta el siguiente punto */
+  height: 100%;
   background: rgba(255, 255, 255, 0.5);
 }
 
@@ -187,7 +187,7 @@
   background: #ff5e8a;
   border: 2px solid white;
   flex-shrink: 0;
-  margin-right: 4px; /* Espacio de 4px respecto al contenido */
+  margin-right: 16px; /* Espacio de 4px respecto al contenido */
 }
 
 .timeline-content {
@@ -197,23 +197,17 @@
   flex: 1;
 }
 
-/* Versión móvil */
 @media (max-width: 768px) {
   .timeline-item {
-    padding-left: 3rem;
+    padding-left: 3.5rem; /* Aumentado de 3rem */
   }
   
   .timeline-item:before {
-    left: 1.5rem;
+    left: 2.2rem; /* Aumentado de 1.5rem */
   }
   
   .timeline-dot {
-    left: 1.35rem;
-  }
-  
-  .timeline-content {
-    margin-left: 0.5rem;
-    padding: 0.8rem;
+    left: 1.85rem; /* Ajustado de 1.35rem */
   }
 }
 
@@ -499,18 +493,7 @@
 
   <div class="max-w-3xl mx-auto relative z-10">
     <h2 class="text-3xl font-bold text-center text-white mb-8">Nuestra Línea de Tiempo</h2>
-
     <div id="timeline" class="space-y-4">
-      <!-- Ejemplo de evento -->
-      <div class="timeline-item flex items-center gap-1">
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h4 class="font-semibold">15/03/2025</h4>
-          <p>Este es un evento de ejemplo</p>
-        </div>
-      </div>
-
-      <!-- Si no hay eventos -->
       <div class="empty-timeline">
         <i class="fas fa-calendar-alt text-4xl mb-2"></i>
         <p>No hay eventos aún</p>
@@ -523,20 +506,15 @@
       <h3 class="text-xl font-semibold mb-3">Añadir nuevo evento</h3>
       <div class="space-y-3">
         <input type="text" id="event-date" placeholder="Fecha (ej: 15/03/2025)" 
-          pattern="\d{2}/\d{2}/\d{4}" 
-          title="Por favor usa el formato dd/mm/yyyy"
-          class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
-
-        <input type="text" id="event-title" placeholder="Título del evento" 
-          class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
-
-        <textarea id="event-description" placeholder="Descripción del evento" 
-          class="w-full p-2 rounded bg-white/20 border border-white/30 text-black" rows="3"></textarea>
+       pattern="\d{2}/\d{2}/\d{4}" 
+       title="Por favor usa el formato dd/mm/yyyy"
+       class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
+        <input type="text" id="event-title" placeholder="Título del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black">
+        <textarea id="event-description" placeholder="Descripción del evento" class="w-full p-2 rounded bg-white/20 border border-white/30 text-black" rows="3"></textarea>
         
         <!-- Botón centrado -->
         <div class="flex justify-center">
-          <button onclick="addNewEvent()" 
-            class="px-4 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition">
+          <button onclick="addNewEvent()" class="px-4 py-2 bg-pink-600 rounded-full hover:bg-pink-700 transition">
             Añadir Evento <i class="fas fa-plus ml-1"></i>
           </button>
         </div>
