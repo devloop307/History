@@ -160,33 +160,32 @@
 }
 
     /* Línea de tiempo */
-
-/* Línea de tiempo mejorada */
+/* Línea de tiempo mejorada - Versión final */
 .timeline-item {
   position: relative;
-  padding-left: 3rem; /* Espacio para el punto y línea */
+  padding-left: 3.5rem; /* Más espacio para el punto y margen */
   margin-bottom: 2rem;
 }
 
 .timeline-item:before {
   content: '';
   position: absolute;
-  left: 1.5rem; /* Posición de la línea */
-  top: 1.5rem; /* Empieza después del primer punto */
+  left: 1.75rem; /* Línea más a la derecha */
+  top: 0; /* Empieza desde el punto */
   width: 2px;
-  height: calc(100% + 1rem); /* Conecta con el siguiente punto */
+  height: 100%; /* Llega hasta el siguiente punto */
   background: rgba(255, 255, 255, 0.5);
 }
 
 .timeline-item:last-child:before {
-  height: calc(100% - 1.5rem); /* Ajuste para el último elemento */
+  height: 50%; /* Ajuste para el último elemento */
 }
 
 .timeline-dot {
   position: absolute;
-  left: 1.35rem; /* Alineado con la línea */
-  top: 50%; /* Centrado verticalmente */
-  transform: translateY(-50%); /* Ajuste fino de centrado */
+  left: 1.6rem; /* Alineado con la línea */
+  top: 50%;
+  transform: translateY(-50%);
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -199,28 +198,30 @@
   background: rgba(255, 255, 255, 0.15);
   padding: 1rem;
   border-radius: 0.5rem;
+  margin-left: 0.8rem; /* Margen derecho adicional */
   transition: all 0.3s ease;
-  position: relative;
 }
 
 /* Versión móvil */
 @media (max-width: 768px) {
   .timeline-item {
-    padding-left: 2.5rem;
+    padding-left: 3rem;
   }
   
   .timeline-item:before {
-    left: 1.2rem;
+    left: 1.5rem;
   }
   
   .timeline-dot {
-    left: 1.05rem;
+    left: 1.35rem;
   }
   
   .timeline-content {
+    margin-left: 0.5rem;
     padding: 0.8rem;
   }
 }
+
     .timeline-content:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateX(5px);
