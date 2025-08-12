@@ -159,59 +159,63 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.timeline-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem; /* Espacio entre eventos */
-}
+ .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 2rem;
+    }
+    .timeline-item:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .timeline-item:last-child:before {
+      height: 1.5rem;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -8px;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ff5e8a;
+      border: 2px solid white;
+    }
+    .timeline-content {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .timeline-content:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateX(5px);
+    }
 
-.timeline-item:before {
-  content: '';
-  position: absolute;
-  left: 2.5rem;
-  top: 24px; /* Empieza desde el punto */
-  width: 2px;
-  height: calc(100% - 16px); /* Altura hasta el siguiente punto */
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.timeline-item:last-child:before {
-  display: none; /* Elimina la línea del último elemento */
-}
-
-.timeline-dot {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #ff5e8a;
-  border: 2px solid white;
-  flex-shrink: 0;
-  margin-right: 16px;
-  z-index: 1; /* Asegura que el punto esté sobre la línea */
-}
-.timeline-content {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  flex: 1;
-}
-@media (max-width: 768px) {
-  .timeline-item {
-    padding-left: 3.5rem;
-  }
-  
-  .timeline-item:before {
-    left: 2.2rem;
-    top: 24px;
-    height: calc(100% - 16px);
-  }
-  
-  .timeline-dot {
-    left: 1.85rem;
-  }
-}
+    /* Responsividad */
+    @media (max-width: 768px) {
+      .carousel-item img {
+        height: 300px;
+      }
+      .glass {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+      h1 {
+        font-size: 2.5rem;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+      .main-container {
+        padding: 0 0.5rem;
+      }
+    }
     .timeline-content:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateX(5px);
