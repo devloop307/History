@@ -160,16 +160,33 @@
 }
 
     /* Línea de tiempo */
-    .timeline-item {
+
+/* Línea de tiempo mejorada */
+.timeline-item {
   position: relative;
-  padding-left: 2.5rem; /* espacio para el punto y la línea */
-  margin-bottom: 1.5rem;
+  padding-left: 3rem; /* Espacio para el punto y línea */
+  margin-bottom: 2rem;
+}
+
+.timeline-item:before {
+  content: '';
+  position: absolute;
+  left: 1.5rem; /* Posición de la línea */
+  top: 1.5rem; /* Empieza después del primer punto */
+  width: 2px;
+  height: calc(100% + 1rem); /* Conecta con el siguiente punto */
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.timeline-item:last-child:before {
+  height: calc(100% - 1.5rem); /* Ajuste para el último elemento */
 }
 
 .timeline-dot {
   position: absolute;
-  left: 0; /* alinear a la izquierda */
-  top: 2rem; /* bajar para que esté al lado del texto */
+  left: 1.35rem; /* Alineado con la línea */
+  top: 50%; /* Centrado verticalmente */
+  transform: translateY(-50%); /* Ajuste fino de centrado */
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -178,28 +195,32 @@
   z-index: 2;
 }
 
-.timeline-item:before {
-  content: '';
-  position: absolute;
-  left: 7px; /* centrar la línea con el punto */
-  top: 0;
-  width: 2px;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  z-index: 1;
+.timeline-content {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.timeline-item:last-child:before {
-  height: 8px; /* cortar la línea después del último punto */
+/* Versión móvil */
+@media (max-width: 768px) {
+  .timeline-item {
+    padding-left: 2.5rem;
+  }
+  
+  .timeline-item:before {
+    left: 1.2rem;
+  }
+  
+  .timeline-dot {
+    left: 1.05rem;
+  }
+  
+  .timeline-content {
+    padding: 0.8rem;
+  }
 }
-
-    .timeline-content {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 1rem;
-      border-radius: 0.5rem;
-      transition: all 0.3s ease;
-      position: relative;
-    }
     .timeline-content:hover {
       background: rgba(255, 255, 255, 0.25);
       transform: translateX(5px);
@@ -356,34 +377,6 @@
     .action-btn:hover {
       transform: scale(1.05);
       background: #e04d75;
-    }
-
-    /* Responsividad mejorada */
-    @media (max-width: 768px) {
-      .carousel-item img {
-        height: 300px;
-      }
-      h1 {
-        font-size: 2.5rem;
-      }
-      h2 {
-        font-size: 1.8rem;
-      }
-      .edit-buttons {
-        display: flex !important;
-        gap: 5px;
-      }
-      .action-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      .action-btn {
-        width: 100%;
-        justify-content: center;
-      }
-      .image-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      }
     }
 
     @media (max-width: 480px) {
