@@ -170,7 +170,7 @@
       left: 0;
       top: 0;
       width: 2px;
-      height: 100%;
+      height: calc(100% + 2rem);
       background: rgba(255, 255, 255, 0.5);
     }
     .timeline-item:last-child:before {
@@ -215,6 +215,9 @@
       .main-container {
         padding: 0 0.5rem;
       }
+      .timeline-item:before {
+        height: calc(100% + 1.5rem); /* Menor espacio en móvil */
+    }
     }
     .timeline-content:hover {
       background: rgba(255, 255, 255, 0.25);
